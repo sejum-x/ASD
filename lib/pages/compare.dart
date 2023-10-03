@@ -16,7 +16,7 @@ class _Compare extends State<Compare> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFABB8C4),
+      backgroundColor: Color(0xff212930),
       body: Column(
         children: [
           Container(
@@ -132,7 +132,7 @@ Widget bottomTitlesWidget(double value, TitleMeta meta){
   const style = TextStyle(
     fontSize: 15,
     fontWeight: FontWeight.bold,
-    color: Colors.grey,
+    color:  Colors.grey,
   );
   Widget text;
   switch (value.toInt()){
@@ -191,7 +191,7 @@ FlBorderData get boarderData => FlBorderData(
 
 LineChartBarData get lineChartBarData1 => LineChartBarData(
   isCurved: true,
-  color: Colors.purple,
+  color: Color(0xff624e66),
   barWidth: 6,
   isStrokeCapRound: true,
   dotData: FlDotData(show: false),

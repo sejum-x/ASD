@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: HiddenDrawer(),
       theme: ThemeData(primarySwatch: MaterialColor(
-       0xff6c8399,
+       0xff141a20,
        <int, Color>{
         50: Color(0xff6c8399), // Шкала тонів від 50 до 900
         100: Color(0xff6c8399),

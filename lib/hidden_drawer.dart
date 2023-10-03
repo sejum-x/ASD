@@ -36,7 +36,7 @@ class _HiddenDrawerState extends State<HiddenDrawer> {
             name: 'Compare',
             baseStyle: myTextStyle,
             selectedStyle: myTextStyle,
-            colorLineSelected: Color(0xff6c8399),
+            colorLineSelected: Color(0xffffffff),
           ),
           Compare()
       ),
@@ -45,7 +45,7 @@ class _HiddenDrawerState extends State<HiddenDrawer> {
             name: 'Selection',
             baseStyle: myTextStyle,
             selectedStyle: myTextStyle,
-            colorLineSelected: Color(0xff6c8399),
+            colorLineSelected: Color(0xffffffff),
           ),
           Selection()
       ),
@@ -54,7 +54,7 @@ class _HiddenDrawerState extends State<HiddenDrawer> {
             name: 'Shell',
             baseStyle: myTextStyle,
             selectedStyle: myTextStyle,
-            colorLineSelected: Color(0xff6c8399),
+            colorLineSelected: Color(0xffffffff),
           ),
           Shell()
       ),
@@ -63,7 +63,7 @@ class _HiddenDrawerState extends State<HiddenDrawer> {
             name: 'Quick',
             baseStyle: myTextStyle,
             selectedStyle: myTextStyle,
-            colorLineSelected: Color(0xff6c8399),
+            colorLineSelected: Color(0xffffffff),
           ),
           Quick()
       ),
@@ -72,7 +72,7 @@ class _HiddenDrawerState extends State<HiddenDrawer> {
             name: 'Merge',
             baseStyle: myTextStyle,
             selectedStyle: myTextStyle,
-            colorLineSelected: Color(0xff6c8399),
+            colorLineSelected: Color(0xffffffff),
           ),
           Merge()
       ),
@@ -81,7 +81,7 @@ class _HiddenDrawerState extends State<HiddenDrawer> {
             name: 'Count',
             baseStyle: myTextStyle,
             selectedStyle: myTextStyle,
-            colorLineSelected: Color(0xff6c8399),
+            colorLineSelected: Color(0xffffffff),
           ),
           Count()
       ),
