@@ -25,32 +25,30 @@ class _Compare extends State<Compare> {
             child: showChart ? _LineChart() : SizedBox(), // Відображаємо графік, якщо showChart == true
             //child: _LineChart(),
           ),
-    Expanded(
-          child: Container(
-            color: Color(0xffffffff),
-            padding: EdgeInsets.all(16.0), // Додайте відступи для красивого вигляду
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start, // Вирівняти кнопку зліва
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      showChart = !showChart; // Змінюємо стан, коли кнопка натиснута
-                    });
-                  },
-                  child: Text(showChart ? 'Hide' : 'Show'),
-                ),
-              ],
+          Expanded(
+            child: Container(
+              color: Color(0xffffffff),
+              padding: EdgeInsets.all(16.0), // Додайте відступи для красивого вигляду
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start, // Вирівняти кнопку зліва
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        showChart = !showChart; // Змінюємо стан, коли кнопка натиснута
+                      });
+                    },
+                    child: Text(showChart ? 'Hide' : 'Show'),
+                  ),
+                ],
+              ),
             ),
-          ),
-    )
+          )
         ],
       ),
     );
   }
 }
-
-
 
 class _LineChart extends StatelessWidget {
   @override
