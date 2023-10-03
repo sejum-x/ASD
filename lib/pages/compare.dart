@@ -10,9 +10,11 @@ class Compare extends StatefulWidget{
   State<Compare> createState() => _Compare();
 }
 
-class _Compare extends State<Compare>{
+class _Compare extends State<Compare> {
+  bool showChart = false; // Початково графік не відображається
+
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFABB8C4),
       body: Column(
@@ -20,18 +22,34 @@ class _Compare extends State<Compare>{
           Container(
             height: MediaQuery.of(context).size.height * 0.7,
             color: Color(0xff212930),
+            child: showChart ? _LineChart() : SizedBox(), // Відображаємо графік, якщо showChart == true
             //child: _LineChart(),
           ),
-          Expanded(
-              child: Container(
-                color: Color(0xffffffff),
-              )
+    Expanded(
+          child: Container(
+            color: Color(0xffffffff),
+            padding: EdgeInsets.all(16.0), // Додайте відступи для красивого вигляду
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start, // Вирівняти кнопку зліва
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      showChart = !showChart; // Змінюємо стан, коли кнопка натиснута
+                    });
+                  },
+                  child: Text(showChart ? 'Hide' : 'Show'),
+                ),
+              ],
+            ),
           ),
+    )
         ],
       ),
     );
   }
 }
+
 
 
 class _LineChart extends StatelessWidget {
