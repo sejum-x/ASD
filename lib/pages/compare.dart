@@ -35,6 +35,14 @@ class _Compare extends State<Compare> {
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
+
+                      });
+                    },
+                    child: Text('Sort'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
                         showChart = !showChart; // Змінюємо стан, коли кнопка натиснута
                       });
                     },
