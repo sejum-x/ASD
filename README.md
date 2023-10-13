@@ -1,6 +1,6 @@
 # flutter_pj
 
-A new Flutter project.
+Comparison of algorithms using Flutteг and Dart
 
 ## Getting Started
 
