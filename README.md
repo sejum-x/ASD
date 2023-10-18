@@ -1,6 +1,6 @@
 # flutter_pj
 
-Comparison of algorithms using Flutteг and Dart
+Comparison of algorithms using Flutter and Dart
 
 ## Getting Started
 
