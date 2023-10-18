@@ -191,7 +191,11 @@ LineChartData get sampleData1 => LineChartData(
 );
 
 List<LineChartBarData> get lineBarsData => [
-  lineChartBarData1
+  selectionLineChartBarData,
+  shellLineChartBarData,
+  quickLineChartBarData,
+  mergeLineChartBarData,
+  countingLineChartBarData,
 ];
 
 FlTitlesData get titlesData => FlTitlesData(
@@ -307,7 +311,7 @@ FlBorderData get boarderData => FlBorderData(
   ),
 );
 
-LineChartBarData get lineChartBarData1 => LineChartBarData(
+LineChartBarData get selectionLineChartBarData => LineChartBarData(
   isCurved: true,
   color: Color(0xff624e66),
   barWidth: 6,
@@ -317,13 +321,77 @@ LineChartBarData get lineChartBarData1 => LineChartBarData(
   spots: const [
     FlSpot(4.133, 0.500),
     FlSpot(13.402, 1.000),
-    FlSpot(87.100, 2.000),
-    FlSpot(154.000, 4.000),
+    FlSpot(87.100, 3.000),
+    FlSpot(154.000, 6.000),
     FlSpot(234.000, 8.000),
     FlSpot(380.000, 10.000),
   ]
 );
 
+LineChartBarData get shellLineChartBarData => LineChartBarData(
+    isCurved: true,
+    color: Color(0xff024e66),
+    barWidth: 6,
+    isStrokeCapRound: true,
+    dotData: FlDotData(show: false),
+    belowBarData: BarAreaData(show: false),
+    spots: const [
+      FlSpot(4.133, 0.100),
+      FlSpot(13.402, 0.500),
+      FlSpot(87.100, 2.500),
+      FlSpot(154.000, 4.000),
+      FlSpot(234.000, 5.000),
+      FlSpot(380.000, 7.000),
+    ]
+);
 
+LineChartBarData get quickLineChartBarData => LineChartBarData(
+    isCurved: true,
+    color: Color(0xfff04e66),
+    barWidth: 6,
+    isStrokeCapRound: true,
+    dotData: FlDotData(show: false),
+    belowBarData: BarAreaData(show: false),
+    spots: const [
+      FlSpot(4.133, 0.100),
+      FlSpot(13.402, 0.500),
+      FlSpot(87.100, 1.000),
+      FlSpot(154.000, 1.600),
+      FlSpot(234.000, 2.300),
+      FlSpot(380.000, 3.300),
+    ]
+);
 
+LineChartBarData get mergeLineChartBarData => LineChartBarData(
+    isCurved: true,
+    color: Color(0xff903321),
+    barWidth: 6,
+    isStrokeCapRound: true,
+    dotData: FlDotData(show: false),
+    belowBarData: BarAreaData(show: false),
+    spots: const [
+      FlSpot(4.133, 0.100),
+      FlSpot(13.402, 0.400),
+      FlSpot(87.100, 0.900),
+      FlSpot(154.000, 1.300),
+      FlSpot(234.000, 2.000),
+      FlSpot(380.000, 2.800),
+    ]
+);
 
+LineChartBarData get countingLineChartBarData => LineChartBarData(
+    isCurved: true,
+    color: Color(0xff54bd48),
+    barWidth: 6,
+    isStrokeCapRound: true,
+    dotData: FlDotData(show: false),
+    belowBarData: BarAreaData(show: false),
+    spots: const [
+      FlSpot(4.133, 0.100),
+      FlSpot(13.402, 0.300),
+      FlSpot(87.100, 0.700),
+      FlSpot(154.000, 1.000),
+      FlSpot(234.000, 1.500),
+      FlSpot(380.000, 2.000),
+    ]
+);
