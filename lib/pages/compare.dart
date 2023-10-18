@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter_pj/backend/array.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class Compare extends StatefulWidget{
@@ -12,51 +13,161 @@ class Compare extends StatefulWidget{
 
 class _Compare extends State<Compare> {
   bool showChart = false; // Початково графік не відображається
-
+  bool? isSelection = true;
+  bool? isShell = true;
+  bool? isQuick = true;
+  bool? isMerge = true;
+  bool? isCounting = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xff212930),
-      body: Column(
+      body: Row(
         children: [
           Container(
-            height: MediaQuery.of(context).size.height * 0.7,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width * 0.6,
             color: Color(0xff212930),
             child: showChart ? _LineChart() : SizedBox(), // Відображаємо графік, якщо showChart == true
             //child: _LineChart(),
           ),
-          Expanded(
-            child: Container(
-              color: Color(0xffffffff),
-              padding: EdgeInsets.all(16.0), // Додайте відступи для красивого вигляду
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start, // Вирівняти кнопку зліва
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
+          Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width * 0.4,
+            color: Color(0xff012430),
+            child: Column(
+              children: [
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.46,
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  color: Color(0xff012430),
+                ),
+                Expanded(
+                  child: Container(
+                    color: Color(0xff912130),
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    child: Column(
+                      children: [
+                        CheckboxListTile(
+                          title: const Text('Selection'),
+                          value: isSelection,
+                          onChanged: (bool? newValue){
+                          setState(() {
+                             isSelection = newValue;
+                          });
+                          },
+                          activeColor: Colors.orangeAccent,
+                          checkColor: Colors.white,
+                          tileColor: Colors.black12,
+                          controlAffinity: ListTileControlAffinity.leading,
+                          tristate: true,
+                        ),
 
-                      });
-                    },
-                    child: Text('Sort'),
+                        CheckboxListTile(
+                          title: const Text('Shell'),
+                          value: isShell,
+                          onChanged: (bool? newValue){
+                            setState(() {
+                              isShell = newValue;
+                            });
+                          },
+                          activeColor: Colors.orangeAccent,
+                          checkColor: Colors.white,
+                          tileColor: Colors.black12,
+                          controlAffinity: ListTileControlAffinity.leading,
+                          tristate: true,
+                        ),
+
+                        CheckboxListTile(
+                          title: const Text('Quick'),
+                          value: isQuick,
+                          onChanged: (bool? newValue){
+                            setState(() {
+                              isQuick = newValue;
+                            });
+                          },
+                          activeColor: Colors.orangeAccent,
+                          checkColor: Colors.white,
+                          tileColor: Colors.black12,
+                          controlAffinity: ListTileControlAffinity.leading,
+                          tristate: true,
+                        ),
+
+                        CheckboxListTile(
+                          title: const Text('Merge'),
+                          value: isMerge,
+                          onChanged: (bool? newValue){
+                            setState(() {
+                              isMerge = newValue;
+                            });
+                          },
+                          activeColor: Colors.orangeAccent,
+                          checkColor: Colors.white,
+                          tileColor: Colors.black12,
+                          controlAffinity: ListTileControlAffinity.leading,
+                          tristate: true,
+                        ),
+
+                        CheckboxListTile(
+                          title: const Text('Counting'),
+                          value: isCounting,
+                          onChanged: (bool? newValue){
+                            setState(() {
+                              isCounting = newValue;
+                            });
+                          },
+                          activeColor: Colors.orangeAccent,
+                          checkColor: Colors.white,
+                          tileColor: Colors.black12,
+                          controlAffinity: ListTileControlAffinity.leading,
+                          tristate: true,
+                        ),
+
+                        Row(
+                          children: [
+                        //SizedBox(height: 16), // Простір між кнопками
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              // Ваш код для кнопки "Sort"
+                            });
+                          },
+                          child: Text('Sort'),
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(vertical: 16), // Додайте відступи
+                          ),
+                        ),
+                        //SizedBox(height: 16), // Простір між кнопками
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              showChart = !showChart; // Змінюємо стан, коли кнопка натиснута
+                            });
+                          },
+                          child: Text(showChart ? 'Hide' : 'Show'),
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(vertical: 16), // Додайте відступи
+                          ),
+                        ),
+                        ],
+                        ),
+                      ],
+                    ),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        showChart = !showChart; // Змінюємо стан, коли кнопка натиснута
-                      });
-                    },
-                    child: Text(showChart ? 'Hide' : 'Show'),
-                  ),
-                ],
-              ),
+                ),
+
+              ],
             ),
-          )
+          ),
         ],
       ),
     );
   }
 }
+
+/*class sortOptions{
+  bool? isShell;
+}*/
 
 class _LineChart extends StatelessWidget {
   @override
@@ -82,7 +193,6 @@ LineChartData get sampleData1 => LineChartData(
 List<LineChartBarData> get lineBarsData => [
   lineChartBarData1
 ];
-
 
 FlTitlesData get titlesData => FlTitlesData(
   bottomTitles: AxisTitles(
