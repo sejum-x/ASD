@@ -351,7 +351,7 @@ FlBorderData get boarderData => FlBorderData(
   ),
 );
 
-LineChartBarData get selectionLineChartBarData => LineChartBarData(
+/*LineChartBarData get selectionLineChartBarData => LineChartBarData(
   isCurved: true,
   color: Color(0xff624e66),
   barWidth: 6,
@@ -366,9 +366,31 @@ LineChartBarData get selectionLineChartBarData => LineChartBarData(
     FlSpot(234.000, 8.000),
     FlSpot(380.000, 10.000),
   ]
-);
+);*/
 
-LineChartBarData get shellLineChartBarData => LineChartBarData(
+LineChartBarData get selectionLineChartBarData {
+  final List<int> arraySizes = [1024, 4096, 16384, 65536, 262144];
+  final List<FlSpot> spots = [];
+
+  for (int size in arraySizes) {
+    final List<int> array = SortingHelper.generateRandomArray(size, 100); // Adjust the max value as needed
+    final double sortingTime = SortingHelper.measureSortingTime(SortingHelper.selectionSort, List.from(array));
+    spots.add(FlSpot(size.toDouble()/1000, sortingTime * 10));
+  }
+
+  return LineChartBarData(
+    isCurved: true,
+    color: Color(0xff624e66), // Color for Selection Sort
+    barWidth: 6,
+    isStrokeCapRound: true,
+    dotData: FlDotData(show: false),
+    belowBarData: BarAreaData(show: false),
+    spots: spots,
+  );
+}
+
+
+/*LineChartBarData get shellLineChartBarData => LineChartBarData(
     isCurved: true,
     color: Color(0xff024e66),
     barWidth: 6,
@@ -383,9 +405,31 @@ LineChartBarData get shellLineChartBarData => LineChartBarData(
       FlSpot(234.000, 5.000),
       FlSpot(380.000, 7.000),
     ]
-);
+);*/
 
-LineChartBarData get quickLineChartBarData => LineChartBarData(
+LineChartBarData get shellLineChartBarData {
+  final List<int> arraySizes = [1024, 4096, 16384, 65536, 262144];
+  final List<FlSpot> spots = [];
+
+  for (int size in arraySizes) {
+    final List<int> array = SortingHelper.generateRandomArray(size, 100); // Adjust the max value as needed
+    final double sortingTime = SortingHelper.measureSortingTime(SortingHelper.shellSort, List.from(array));
+    spots.add(FlSpot(size.toDouble()/1000, sortingTime * 10));
+  }
+
+  return LineChartBarData(
+    isCurved: true,
+    color: Color(0xff024e66), // Color for Shell Sort
+    barWidth: 6,
+    isStrokeCapRound: true,
+    dotData: FlDotData(show: false),
+    belowBarData: BarAreaData(show: false),
+    spots: spots,
+  );
+}
+
+
+/*LineChartBarData get quickLineChartBarData => LineChartBarData(
     isCurved: true,
     color: Color(0xfff04e66),
     barWidth: 6,
@@ -400,9 +444,31 @@ LineChartBarData get quickLineChartBarData => LineChartBarData(
       FlSpot(234.000, 2.300),
       FlSpot(380.000, 3.300),
     ]
-);
+);*/
 
-LineChartBarData get mergeLineChartBarData => LineChartBarData(
+LineChartBarData get quickLineChartBarData {
+  final List<int> arraySizes = [1024, 16384, 65536, 262144];
+  final List<FlSpot> spots = [];
+
+  for (int size in arraySizes) {
+    final List<int> array = SortingHelper.generateRandomArray(size, 100); // Adjust the max value as needed
+    final double sortingTime = SortingHelper.measureSortingTime(SortingHelper.quickSort, List.from(array));
+    spots.add(FlSpot((size.toDouble())/1000, sortingTime * 10));
+  }
+
+  return LineChartBarData(
+    isCurved: true,
+    color: Color(0xfff04e66),
+    barWidth: 4,
+    isStrokeCapRound: true,
+    dotData: FlDotData(show: false),
+    belowBarData: BarAreaData(show: false),
+    spots: spots,
+  );
+}
+
+
+/*LineChartBarData get mergeLineChartBarData => LineChartBarData(
     isCurved: true,
     color: Color(0xff903321),
     barWidth: 6,
@@ -417,9 +483,30 @@ LineChartBarData get mergeLineChartBarData => LineChartBarData(
       FlSpot(234.000, 2.000),
       FlSpot(380.000, 2.800),
     ]
-);
+);*/
 
-LineChartBarData get countingLineChartBarData => LineChartBarData(
+LineChartBarData get mergeLineChartBarData {
+  final List<int> arraySizes = [1024, 4096, 16384, 65536, 262144];
+  final List<FlSpot> spots = [];
+
+  for (int size in arraySizes) {
+    final List<int> array = SortingHelper.generateRandomArray(size, 100); // Adjust the max value as needed
+    final double sortingTime = SortingHelper.measureSortingTime(SortingHelper.mergeSort, List.from(array));
+    spots.add(FlSpot(size.toDouble()/1000, sortingTime * 10));
+  }
+  return LineChartBarData(
+    isCurved: true,
+    color: Color(0xff903321), // Color for Merge Sort
+    barWidth: 6,
+    isStrokeCapRound: true,
+    dotData: FlDotData(show: false),
+    belowBarData: BarAreaData(show: false),
+    spots: spots,
+  );
+}
+
+
+/*LineChartBarData get countingLineChartBarData => LineChartBarData(
     isCurved: true,
     color: Color(0xff54bd48),
     barWidth: 6,
@@ -434,4 +521,25 @@ LineChartBarData get countingLineChartBarData => LineChartBarData(
       FlSpot(234.000, 1.500),
       FlSpot(380.000, 2.000),
     ]
-);
+);*/
+
+LineChartBarData get countingLineChartBarData {
+  final List<int> arraySizes = [1024, 4096, 16384, 65536, 262144];
+  final List<FlSpot> spots = [];
+
+  for (int size in arraySizes) {
+    final List<int> array = SortingHelper.generateRandomArray(size, 100); // Adjust the max value as needed
+    final double sortingTime = SortingHelper.measureSortingTime(SortingHelper.countingSort, List.from(array));
+    spots.add(FlSpot(size.toDouble()/1000, sortingTime * 10));
+  }
+
+  return LineChartBarData(
+    isCurved: true,
+    color: Color(0xff54bd48), // Color for Counting Sort
+    barWidth: 6,
+    isStrokeCapRound: true,
+    dotData: FlDotData(show: false),
+    belowBarData: BarAreaData(show: false),
+    spots: spots,
+  );
+}
