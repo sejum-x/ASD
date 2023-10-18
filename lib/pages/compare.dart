@@ -11,13 +11,19 @@ class Compare extends StatefulWidget{
   State<Compare> createState() => _Compare();
 }
 
+bool? isSelection = true;
+bool? isShell = true;
+bool? isQuick = true;
+bool? isMerge = true;
+bool? isCounting = true;
+
 class _Compare extends State<Compare> {
   bool showChart = false; // Початково графік не відображається
-  bool? isSelection = true;
+  /*bool? isSelection = true;
   bool? isShell = true;
   bool? isQuick = true;
   bool? isMerge = true;
-  bool? isCounting = true;
+  bool? isCounting = true;*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -165,10 +171,6 @@ class _Compare extends State<Compare> {
   }
 }
 
-/*class sortOptions{
-  bool? isShell;
-}*/
-
 class _LineChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -179,7 +181,7 @@ class _LineChart extends StatelessWidget {
   }
 }
 
-LineChartData get sampleData1 => LineChartData(
+/*LineChartData get sampleData1 => LineChartData(
   gridData: gridData,
   titlesData: titlesData,
   borderData: boarderData,
@@ -196,7 +198,45 @@ List<LineChartBarData> get lineBarsData => [
   quickLineChartBarData,
   mergeLineChartBarData,
   countingLineChartBarData,
-];
+];*/
+
+LineChartData get sampleData1 => LineChartData(
+  gridData: gridData,
+  titlesData: titlesData,
+  borderData: boarderData,
+  lineBarsData: getLineBarsData(),
+  minX: 0,
+  maxX: 500,
+  minY: 0,
+  maxY: 10,
+);
+
+List<LineChartBarData> getLineBarsData() {
+  final List<LineChartBarData> lineBarsData = [];
+
+  if (isSelection == true) {
+    lineBarsData.add(selectionLineChartBarData);
+  }
+
+  if (isShell == true) {
+    lineBarsData.add(shellLineChartBarData);
+  }
+
+  if (isQuick == true) {
+    lineBarsData.add(quickLineChartBarData);
+  }
+
+  if (isMerge == true) {
+    lineBarsData.add(mergeLineChartBarData);
+  }
+
+  if (isCounting == true) {
+    lineBarsData.add(countingLineChartBarData);
+  }
+
+  return lineBarsData;
+}
+
 
 FlTitlesData get titlesData => FlTitlesData(
   bottomTitles: AxisTitles(
