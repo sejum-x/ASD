@@ -23,6 +23,9 @@ String sortingResult = '';
 List<int> sizes = [1024, 4096, 16384, 65536, 262144];
 List<Map<String, dynamic>> sortingResults = [];
 
+List<String> chartHeight = ["1", "5", "10", "15", "20", "30"];
+String choosenHeight = "10";
+
 class SortingInfo {
   final String algorithmName;
   final int size;
@@ -182,7 +185,7 @@ class _Compare extends State<Compare> {
 
                         Row(
                           children: [
-                        //SizedBox(height: 16), // Простір між кнопками
+                        SizedBox(width: 16), // Простір між кнопками
                         ElevatedButton(
                           onPressed: () {
                             setState(() {
@@ -194,7 +197,7 @@ class _Compare extends State<Compare> {
                             padding: EdgeInsets.symmetric(vertical: 16), // Додайте відступи
                           ),
                         ),
-                        //SizedBox(height: 16), // Простір між кнопками
+                        SizedBox(width: 16), // Простір між кнопками
                         ElevatedButton(
                           onPressed: () {
                             setState(() {
@@ -206,11 +209,29 @@ class _Compare extends State<Compare> {
                             padding: EdgeInsets.symmetric(vertical: 16), // Додайте відступи
                           ),
                         ),
+                            SizedBox(width: 16),
+                            DropdownButton(
+                              hint: Text("Select height"),
+                              dropdownColor: Colors.grey,
+                              value: choosenHeight,
+                              onChanged: (newValue){
+                                setState(() {
+                                  choosenHeight = newValue!;
+                                });
+                              },
+                              items: chartHeight.map((valueItem){
+                                return DropdownMenuItem(
+                                  value: valueItem,
+                                  child: Text(valueItem),
+                                );
+                              }).toList(),
+                            ),
 
                         ],
                         ),
                       ],
                     ),
+
                   ),
                 ),
               ],
@@ -267,7 +288,7 @@ LineChartData get sampleData1 => LineChartData(
   minX: 0,
   maxX: 500, // Adjust these values as needed
   minY: 0,
-  maxY: 10, // Adjust these values as needed
+  maxY: double.tryParse(choosenHeight), // Adjust these values as needed
 );
 
 List<LineChartBarData> getLineBarsData() {
@@ -323,6 +344,7 @@ LineChartBarData get quickLineChartBarData {
   return LineChartBarData(
     spots: spots,
     isCurved: true,
+    curveSmoothness: 0.1,
     color: Colors.blue, // Налаштуйте колір лінії
     isStrokeCapRound: true,
     belowBarData: BarAreaData(show: false),
@@ -354,7 +376,8 @@ LineChartBarData get selectionLineChartBarData {
 
   return LineChartBarData(
     spots: spots,
-    isCurved: false,
+    isCurved: true,
+    curveSmoothness: 0.08,
     color: Colors.red, // Налаштуйте колір лінії
     isStrokeCapRound: true,
     belowBarData: BarAreaData(show: false),
@@ -388,6 +411,7 @@ LineChartBarData get shellLineChartBarData {
   return LineChartBarData(
     spots: spots,
     isCurved: true,
+    curveSmoothness: 0.1,
     color: Colors.purple, // Налаштуйте колір лінії
     isStrokeCapRound: true,
     belowBarData: BarAreaData(show: false),
@@ -420,6 +444,7 @@ LineChartBarData get mergeLineChartBarData {
   return LineChartBarData(
     spots: spots,
     isCurved: true,
+    curveSmoothness: 0.1,
     color: Colors.pink, // Налаштуйте колір лінії
     isStrokeCapRound: true,
     belowBarData: BarAreaData(show: false),
@@ -452,6 +477,7 @@ LineChartBarData get countingLineChartBarData {
   return LineChartBarData(
     spots: spots,
     isCurved: true,
+    curveSmoothness: 0.1,
     color: Colors.green, // Налаштуйте колір лінії
     isStrokeCapRound: true,
     belowBarData: BarAreaData(show: false),
@@ -498,6 +524,21 @@ Widget leftTitlesWidget(double value, TitleMeta meta){
       break;
     case 10:
       text = '10';
+      break;
+    case 12:
+      text = '12';
+      break;
+    case 14:
+      text = '14';
+      break;
+    case 16:
+      text = '16';
+      break;
+    case 18:
+      text = '18';
+      break;
+    case 20:
+      text = '20';
       break;
     default:
       return Container();
