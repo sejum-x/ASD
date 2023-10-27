@@ -11,11 +11,26 @@ class Compare extends StatefulWidget{
   State<Compare> createState() => _Compare();
 }
 
-bool? isSelection = true;
+bool? isSelection = false;
 bool? isShell = true;
 bool? isQuick = true;
 bool? isMerge = true;
 bool? isCounting = true;
+
+
+List<int> array = [];
+String sortingResult = '';
+List<int> sizes = [1024, 4096, 16384, 65536, 262144];
+List<Map<String, dynamic>> sortingResults = [];
+
+class SortingInfo {
+  final String algorithmName;
+  final int size;
+  final double sortingTime;
+
+  SortingInfo(this.algorithmName, this.size, this.sortingTime);
+}
+
 
 class _Compare extends State<Compare> {
   bool showChart = false; // Початково графік не відображається
@@ -44,13 +59,49 @@ class _Compare extends State<Compare> {
             child: Column(
               children: [
                 Container(
+                  color: Color(0x0f912130),
                   height: MediaQuery.of(context).size.height * 0.46,
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  color: Color(0xff012430),
+                  child: DataTable(
+                    dataRowHeight: 50, // Ви можете змінити висоту рядків за потребою
+                    columns: <DataColumn>[
+                      DataColumn(
+                        label: Text('Array Size', style: TextStyle(color: Colors.white)),
+                      ),
+                      for (int size in sizes)
+                        DataColumn(
+                          label: Text(size.toString(), style: TextStyle(color: Colors.white)),
+                        ),
+                    ],
+                    rows: sortingResults
+                        .map(
+                          (result) => DataRow(
+                        cells: <DataCell>[
+                          DataCell(
+                            Text(
+                              result['SortingType'].toString(),
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          for (double time in result['SortingTimes'])
+                            DataCell(
+                              Text(
+                                time.toStringAsFixed(4),
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                        ],
+                      ),
+                    )
+                        .toList(),
+                  ),
+
+
+
                 ),
+
                 Expanded(
                   child: Container(
-                    color: Color(0xff912130),
+                    color: Color(0xff3b4956),
                     width: MediaQuery.of(context).size.width * 0.4,
                     child: Column(
                       children: [
@@ -64,7 +115,7 @@ class _Compare extends State<Compare> {
                           },
                           activeColor: Colors.orangeAccent,
                           checkColor: Colors.white,
-                          tileColor: Colors.black12,
+                          tileColor: Colors.white10,
                           controlAffinity: ListTileControlAffinity.leading,
                           tristate: true,
                         ),
@@ -135,7 +186,7 @@ class _Compare extends State<Compare> {
                         ElevatedButton(
                           onPressed: () {
                             setState(() {
-                              // Ваш код для кнопки "Sort"
+                              generateArray();
                             });
                           },
                           child: Text('Sort'),
@@ -155,19 +206,46 @@ class _Compare extends State<Compare> {
                             padding: EdgeInsets.symmetric(vertical: 16), // Додайте відступи
                           ),
                         ),
+
                         ],
                         ),
                       ],
                     ),
                   ),
                 ),
-
               ],
             ),
           ),
         ],
       ),
     );
+  }
+}
+//table
+
+void generateArray() {
+  sortingResults.clear();
+  for (var sortingAlgorithm in [SortingHelper.selectionSort, SortingHelper.shellSort, SortingHelper.quickSort, SortingHelper.countingSort, SortingHelper.mergeSort]) {
+    List<double> sortingTimes = [];
+    for (int size in sizes) {
+      array = SortingHelper.generateRandomArray(size, 10000);
+      double sortingTime = SortingHelper.measureSortingTime(sortingAlgorithm, List.from(array));
+      sortingTimes.add(sortingTime);
+    }
+    String sortingType = sortingAlgorithm == SortingHelper.selectionSort
+        ? 'Selection'
+        : sortingAlgorithm == SortingHelper.shellSort
+        ? 'Shell'
+        : sortingAlgorithm == SortingHelper.quickSort
+        ? 'Quick'
+        : sortingAlgorithm == SortingHelper.countingSort
+        ? 'Counting'
+        : 'Merge';
+
+    sortingResults.add({
+      'SortingType': sortingType,
+      'SortingTimes': sortingTimes,
+    });
   }
 }
 
@@ -181,37 +259,20 @@ class _LineChart extends StatelessWidget {
   }
 }
 
-/*LineChartData get sampleData1 => LineChartData(
-  gridData: gridData,
-  titlesData: titlesData,
-  borderData: boarderData,
-  lineBarsData: lineBarsData,
-  minX: 0,
-  maxX: 500,
-  minY: 0,
-  maxY: 10,
-);
-
-List<LineChartBarData> get lineBarsData => [
-  selectionLineChartBarData,
-  shellLineChartBarData,
-  quickLineChartBarData,
-  mergeLineChartBarData,
-  countingLineChartBarData,
-];*/
-
 LineChartData get sampleData1 => LineChartData(
   gridData: gridData,
   titlesData: titlesData,
   borderData: boarderData,
-  lineBarsData: getLineBarsData(),
+  lineBarsData: getLineBarsData(), // Use the dynamic data here
   minX: 0,
-  maxX: 500,
+  maxX: 500, // Adjust these values as needed
   minY: 0,
-  maxY: 10,
+  maxY: 10, // Adjust these values as needed
 );
 
 List<LineChartBarData> getLineBarsData() {
+
+
   final List<LineChartBarData> lineBarsData = [];
 
   if (isSelection == true) {
@@ -236,6 +297,168 @@ List<LineChartBarData> getLineBarsData() {
 
   return lineBarsData;
 }
+
+LineChartBarData get quickLineChartBarData {
+  List<LineChartBarData> lines = [];
+
+  // Фільтруємо дані для алгоритму Quick
+  var quickData = sortingResults.firstWhere(
+          (result) => result['SortingType'] == 'Quick',
+      orElse: () => {'SortingType': 'Quick', 'SortingTimes': []}
+  );
+  List<double> quickSortingTimes = quickData['SortingTimes'];
+
+  List<FlSpot> spots = [];
+
+  for (int i = 0; i < quickSortingTimes.length; i++) {
+    // Використовуйте час виконання (ось X) та розмір масиву (ось Y)
+    double executionTime = quickSortingTimes[i];
+    double arraySize = sizes[i].toDouble() / 1000;
+    spots.add(FlSpot(arraySize, executionTime));
+
+    // Виводимо точку у консоль
+    print("Point - X: $arraySize, Y: $executionTime");
+  }
+
+  return LineChartBarData(
+    spots: spots,
+    isCurved: true,
+    color: Colors.blue, // Налаштуйте колір лінії
+    isStrokeCapRound: true,
+    belowBarData: BarAreaData(show: false),
+  );
+}
+
+///////////
+LineChartBarData get selectionLineChartBarData {
+  List<LineChartBarData> lines = [];
+
+  // Фільтруємо дані для алгоритму Quick
+  var selectionData = sortingResults.firstWhere(
+          (result) => result['SortingType'] == 'Selection',
+      orElse: () => {'SortingType': 'Selection', 'SortingTimes': []}
+  );
+  List<double> selectionSortingTimes = selectionData['SortingTimes'];
+
+  List<FlSpot> spots = [];
+
+  for (int i = 0; i < selectionSortingTimes.length; i++) {
+    // Використовуйте час виконання (ось X) та розмір масиву (ось Y)
+    double executionTime = selectionSortingTimes[i];
+    double arraySize = sizes[i].toDouble() / 1000;
+    spots.add(FlSpot(arraySize, executionTime));
+
+    // Виводимо точку у консоль
+    print("Point - X: $arraySize, Y: $executionTime");
+  }
+
+  return LineChartBarData(
+    spots: spots,
+    isCurved: false,
+    color: Colors.red, // Налаштуйте колір лінії
+    isStrokeCapRound: true,
+    belowBarData: BarAreaData(show: false),
+  );
+
+}
+
+///////////
+LineChartBarData get shellLineChartBarData {
+  List<LineChartBarData> lines = [];
+
+  // Фільтруємо дані для алгоритму Quick
+  var shellData = sortingResults.firstWhere(
+          (result) => result['SortingType'] == 'Shell',
+      orElse: () => {'SortingType': 'Shell', 'SortingTimes': []}
+  );
+  List<double> shellSortingTimes = shellData['SortingTimes'];
+
+  List<FlSpot> spots = [];
+
+  for (int i = 0; i < shellSortingTimes.length; i++) {
+    // Використовуйте час виконання (ось X) та розмір масиву (ось Y)
+    double executionTime = shellSortingTimes[i];
+    double arraySize = sizes[i].toDouble() / 1000;
+    spots.add(FlSpot(arraySize, executionTime));
+
+    // Виводимо точку у консоль
+    print("Point - X: $arraySize, Y: $executionTime");
+  }
+
+  return LineChartBarData(
+    spots: spots,
+    isCurved: true,
+    color: Colors.purple, // Налаштуйте колір лінії
+    isStrokeCapRound: true,
+    belowBarData: BarAreaData(show: false),
+  );
+}
+
+///////////
+LineChartBarData get mergeLineChartBarData {
+  List<LineChartBarData> lines = [];
+
+  // Фільтруємо дані для алгоритму Quick
+  var mergeData = sortingResults.firstWhere(
+          (result) => result['SortingType'] == 'Merge',
+      orElse: () => {'SortingType': 'Merge', 'SortingTimes': []}
+  );
+  List<double> mergeSortingTimes = mergeData['SortingTimes'];
+
+  List<FlSpot> spots = [];
+
+  for (int i = 0; i < mergeSortingTimes.length; i++) {
+    // Використовуйте час виконання (ось X) та розмір масиву (ось Y)
+    double executionTime = mergeSortingTimes[i];
+    double arraySize = sizes[i].toDouble() / 1000;
+    spots.add(FlSpot(arraySize, executionTime));
+
+    // Виводимо точку у консоль
+    print("Point - X: $arraySize, Y: $executionTime");
+  }
+
+  return LineChartBarData(
+    spots: spots,
+    isCurved: true,
+    color: Colors.pink, // Налаштуйте колір лінії
+    isStrokeCapRound: true,
+    belowBarData: BarAreaData(show: false),
+  );
+}
+
+///////////
+LineChartBarData get countingLineChartBarData {
+  List<LineChartBarData> lines = [];
+
+  // Фільтруємо дані для алгоритму Quick
+  var countData = sortingResults.firstWhere(
+          (result) => result['SortingType'] == 'Counting',
+      orElse: () => {'SortingType': 'Counting', 'SortingTimes': []}
+  );
+  List<double> countSortingTimes = countData['SortingTimes'];
+
+  List<FlSpot> spots = [];
+
+  for (int i = 0; i < countSortingTimes.length; i++) {
+    // Використовуйте час виконання (ось X) та розмір масиву (ось Y)
+    double executionTime = countSortingTimes[i];
+    double arraySize = sizes[i].toDouble() / 1000;
+    spots.add(FlSpot(arraySize, executionTime));
+
+    // Виводимо точку у консоль
+    print("Point - X: $arraySize, Y: $executionTime");
+  }
+
+  return LineChartBarData(
+    spots: spots,
+    isCurved: true,
+    color: Colors.green, // Налаштуйте колір лінії
+    isStrokeCapRound: true,
+    belowBarData: BarAreaData(show: false),
+  );
+}
+
+
 
 
 FlTitlesData get titlesData => FlTitlesData(
@@ -262,19 +485,19 @@ Widget leftTitlesWidget(double value, TitleMeta meta){
   String text;
   switch (value.toInt()){
     case 2:
-      text = '2000';
+      text = '2';
       break;
     case 4:
-      text = '4000';
+      text = '4';
       break;
     case 6:
-      text = '6000';
+      text = '6';
       break;
     case 8:
-      text = '8000';
+      text = '8';
       break;
     case 10:
-      text = '10000';
+      text = '10';
       break;
     default:
       return Container();
@@ -288,7 +511,6 @@ SideTitles leftTitles() => SideTitles(
   interval: 1,
   reservedSize: 40,
 );
-
 
 Widget bottomTitlesWidget(double value, TitleMeta meta){
   const style = TextStyle(
@@ -337,7 +559,6 @@ SideTitles get bottomTitles => SideTitles(
   getTitlesWidget: bottomTitlesWidget,
 );
 
-
 FlGridData get gridData =>  FlGridData(show: true);
 
 FlBorderData get boarderData => FlBorderData(
@@ -350,196 +571,3 @@ FlBorderData get boarderData => FlBorderData(
     top: const BorderSide(color: Colors.transparent),
   ),
 );
-
-/*LineChartBarData get selectionLineChartBarData => LineChartBarData(
-  isCurved: true,
-  color: Color(0xff624e66),
-  barWidth: 6,
-  isStrokeCapRound: true,
-  dotData: FlDotData(show: false),
-  belowBarData: BarAreaData(show: false),
-  spots: const [
-    FlSpot(4.133, 0.500),
-    FlSpot(13.402, 1.000),
-    FlSpot(87.100, 3.000),
-    FlSpot(154.000, 6.000),
-    FlSpot(234.000, 8.000),
-    FlSpot(380.000, 10.000),
-  ]
-);*/
-
-LineChartBarData get selectionLineChartBarData {
-  final List<int> arraySizes = [1024, 4096, 16384, 65536, 262144];
-  final List<FlSpot> spots = [];
-
-  for (int size in arraySizes) {
-    final List<int> array = SortingHelper.generateRandomArray(size, 100); // Adjust the max value as needed
-    final double sortingTime = SortingHelper.measureSortingTime(SortingHelper.selectionSort, List.from(array));
-    spots.add(FlSpot(size.toDouble()/1000, sortingTime * 10));
-  }
-
-  return LineChartBarData(
-    isCurved: true,
-    color: Color(0xff624e66), // Color for Selection Sort
-    barWidth: 6,
-    isStrokeCapRound: true,
-    dotData: FlDotData(show: false),
-    belowBarData: BarAreaData(show: false),
-    spots: spots,
-  );
-}
-
-
-/*LineChartBarData get shellLineChartBarData => LineChartBarData(
-    isCurved: true,
-    color: Color(0xff024e66),
-    barWidth: 6,
-    isStrokeCapRound: true,
-    dotData: FlDotData(show: false),
-    belowBarData: BarAreaData(show: false),
-    spots: const [
-      FlSpot(4.133, 0.100),
-      FlSpot(13.402, 0.500),
-      FlSpot(87.100, 2.500),
-      FlSpot(154.000, 4.000),
-      FlSpot(234.000, 5.000),
-      FlSpot(380.000, 7.000),
-    ]
-);*/
-
-LineChartBarData get shellLineChartBarData {
-  final List<int> arraySizes = [1024, 4096, 16384, 65536, 262144];
-  final List<FlSpot> spots = [];
-
-  for (int size in arraySizes) {
-    final List<int> array = SortingHelper.generateRandomArray(size, 100); // Adjust the max value as needed
-    final double sortingTime = SortingHelper.measureSortingTime(SortingHelper.shellSort, List.from(array));
-    spots.add(FlSpot(size.toDouble()/1000, sortingTime * 10));
-  }
-
-  return LineChartBarData(
-    isCurved: true,
-    color: Color(0xff024e66), // Color for Shell Sort
-    barWidth: 6,
-    isStrokeCapRound: true,
-    dotData: FlDotData(show: false),
-    belowBarData: BarAreaData(show: false),
-    spots: spots,
-  );
-}
-
-
-/*LineChartBarData get quickLineChartBarData => LineChartBarData(
-    isCurved: true,
-    color: Color(0xfff04e66),
-    barWidth: 6,
-    isStrokeCapRound: true,
-    dotData: FlDotData(show: false),
-    belowBarData: BarAreaData(show: false),
-    spots: const [
-      FlSpot(4.133, 0.100),
-      FlSpot(13.402, 0.500),
-      FlSpot(87.100, 1.000),
-      FlSpot(154.000, 1.600),
-      FlSpot(234.000, 2.300),
-      FlSpot(380.000, 3.300),
-    ]
-);*/
-
-LineChartBarData get quickLineChartBarData {
-  final List<int> arraySizes = [1024, 16384, 65536, 262144];
-  final List<FlSpot> spots = [];
-
-  for (int size in arraySizes) {
-    final List<int> array = SortingHelper.generateRandomArray(size, 100); // Adjust the max value as needed
-    final double sortingTime = SortingHelper.measureSortingTime(SortingHelper.quickSort, List.from(array));
-    spots.add(FlSpot((size.toDouble())/1000, sortingTime * 10));
-  }
-
-  return LineChartBarData(
-    isCurved: true,
-    color: Color(0xfff04e66),
-    barWidth: 4,
-    isStrokeCapRound: true,
-    dotData: FlDotData(show: false),
-    belowBarData: BarAreaData(show: false),
-    spots: spots,
-  );
-}
-
-
-/*LineChartBarData get mergeLineChartBarData => LineChartBarData(
-    isCurved: true,
-    color: Color(0xff903321),
-    barWidth: 6,
-    isStrokeCapRound: true,
-    dotData: FlDotData(show: false),
-    belowBarData: BarAreaData(show: false),
-    spots: const [
-      FlSpot(4.133, 0.100),
-      FlSpot(13.402, 0.400),
-      FlSpot(87.100, 0.900),
-      FlSpot(154.000, 1.300),
-      FlSpot(234.000, 2.000),
-      FlSpot(380.000, 2.800),
-    ]
-);*/
-
-LineChartBarData get mergeLineChartBarData {
-  final List<int> arraySizes = [1024, 4096, 16384, 65536, 262144];
-  final List<FlSpot> spots = [];
-
-  for (int size in arraySizes) {
-    final List<int> array = SortingHelper.generateRandomArray(size, 100); // Adjust the max value as needed
-    final double sortingTime = SortingHelper.measureSortingTime(SortingHelper.mergeSort, List.from(array));
-    spots.add(FlSpot(size.toDouble()/1000, sortingTime * 10));
-  }
-  return LineChartBarData(
-    isCurved: true,
-    color: Color(0xff903321), // Color for Merge Sort
-    barWidth: 6,
-    isStrokeCapRound: true,
-    dotData: FlDotData(show: false),
-    belowBarData: BarAreaData(show: false),
-    spots: spots,
-  );
-}
-
-
-/*LineChartBarData get countingLineChartBarData => LineChartBarData(
-    isCurved: true,
-    color: Color(0xff54bd48),
-    barWidth: 6,
-    isStrokeCapRound: true,
-    dotData: FlDotData(show: false),
-    belowBarData: BarAreaData(show: false),
-    spots: const [
-      FlSpot(4.133, 0.100),
-      FlSpot(13.402, 0.300),
-      FlSpot(87.100, 0.700),
-      FlSpot(154.000, 1.000),
-      FlSpot(234.000, 1.500),
-      FlSpot(380.000, 2.000),
-    ]
-);*/
-
-LineChartBarData get countingLineChartBarData {
-  final List<int> arraySizes = [1024, 4096, 16384, 65536, 262144];
-  final List<FlSpot> spots = [];
-
-  for (int size in arraySizes) {
-    final List<int> array = SortingHelper.generateRandomArray(size, 100); // Adjust the max value as needed
-    final double sortingTime = SortingHelper.measureSortingTime(SortingHelper.countingSort, List.from(array));
-    spots.add(FlSpot(size.toDouble()/1000, sortingTime * 10));
-  }
-
-  return LineChartBarData(
-    isCurved: true,
-    color: Color(0xff54bd48), // Color for Counting Sort
-    barWidth: 6,
-    isStrokeCapRound: true,
-    dotData: FlDotData(show: false),
-    belowBarData: BarAreaData(show: false),
-    spots: spots,
-  );
-}
