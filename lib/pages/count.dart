@@ -18,7 +18,7 @@ class _Count extends State<Count>{
 }*/
 
 import 'package:flutter/material.dart';
-import 'package:flutter_pj/backend/array.dart';
+import 'package:flutter_pj/func/array.dart';
 
 class Count extends StatefulWidget {
   const Count({Key? key}) : super(key: key);

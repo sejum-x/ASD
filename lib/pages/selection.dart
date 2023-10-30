@@ -17,7 +17,7 @@ class _Selection extends State<Selection>{
 }*/
 
 
-import 'package:flutter_pj/backend/array.dart';
+import 'package:flutter_pj/func/array.dart';
 
 import 'package:flutter/material.dart';
 

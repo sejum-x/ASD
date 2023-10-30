@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter_pj/backend/array.dart';
+import 'package:flutter_pj/func/array.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class Compare extends StatefulWidget{
