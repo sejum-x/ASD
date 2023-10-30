@@ -7,6 +7,8 @@ import 'package:flutter_pj/pages/shell.dart';
 import 'package:flutter_pj/pages/quick.dart';
 import 'package:flutter_pj/pages/merge.dart';
 import 'package:flutter_pj/pages/count.dart';
+import 'package:flutter_pj/pages/priorityQueuePage.dart';
+import 'package:flutter_pj/pages/binarySearchTreePage.dart';
 import 'package:hidden_drawer_menu/hidden_drawer_menu.dart';
 
 class HiddenDrawer extends StatefulWidget {
@@ -84,6 +86,24 @@ class _HiddenDrawerState extends State<HiddenDrawer> {
             colorLineSelected: Color(0xffffffff),
           ),
           Count()
+      ),
+      ScreenHiddenDrawer(
+          ItemHiddenMenu(
+            name: 'Priority queue',
+            baseStyle: myTextStyle,
+            selectedStyle: myTextStyle,
+            colorLineSelected: Color(0xffffffff),
+          ),
+          PriorityQueuePage()
+      ),
+      ScreenHiddenDrawer(
+          ItemHiddenMenu(
+            name: 'Binary tree',
+            baseStyle: myTextStyle,
+            selectedStyle: myTextStyle,
+            colorLineSelected: Color(0xffffffff),
+          ),
+          BinarySearchTreePage()
       ),
     ];
   }
