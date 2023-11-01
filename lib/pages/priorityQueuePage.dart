@@ -28,27 +28,35 @@ class _PriorityQueuePage extends State<PriorityQueuePage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            height: MediaQuery.of(context).size.height * 0.1,
-            width: MediaQuery.of(context).size.width,
-            color: Color(0xff012430),
-            child: Text(
-              "PriorityQueue",
-              style: TextStyle(color: Colors.white),
+          SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Elements in Priority Queue:",
+                  style: TextStyle(color: Colors.white),
+                ),
+                Container(
+                  height: 200,
+                  width: 170,// Set a fixed height for the container
+                  child: ListView(
+                    physics: AlwaysScrollableScrollPhysics(), // Allow scrolling
+                    children: priorityQueue.elements
+                        .map((element) => Text(
+                        'Value: ${element.val}, Priority: ${element.priority}',
+                        style: TextStyle(color: Colors.white)))
+                        .toList(),
+                  ),
+                ),
+
+                SizedBox(height: 20),
+                // Додатковий контент, який буде прокручуватися разом із списком
+              ],
             ),
           ),
-          SizedBox(height: 20),
-          Text(
-            "Elements in Priority Queue:",
-            style: TextStyle(color: Colors.white),
-          ),
-          Column(
-            children: priorityQueue.elements
-                .map((element) => Text(
-                'Value: ${element.val}, Priority: ${element.priority}',
-                style: TextStyle(color: Colors.white)))
-                .toList(),
-          ),
+
+
+
           SizedBox(height: 20),
           Row(
             children: [
@@ -67,53 +75,66 @@ class _PriorityQueuePage extends State<PriorityQueuePage> {
               ),
             ],
           ),
-          ElevatedButton(
-            onPressed: () {
-              int val = int.parse(valController.text);
-              int priority = int.parse(priorityController.text);
-              Element newElement = Element(val, priority);
-              priorityQueue.enqueue(newElement);
-              setState(() {
-                valController.clear();
-                priorityController.clear();
-              });
-            },
-            child: Text('Enqueue'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Element dequeuedElement = priorityQueue.dequeue();
-              setState(() {
-                result = 'Dequeued: Value: ${dequeuedElement.val}, Priority: ${dequeuedElement.priority}';
-              });
-            },
-            child: Text('Dequeue'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              bool isEmpty = priorityQueue.isEmpty();
-              setState(() {
-                result = 'Is Empty: $isEmpty';
-              });
-            },
-            child: Text('Is Empty'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              int queueSize = priorityQueue.size();
-              Element minElement = priorityQueue.findMin();
-              Element maxElement = priorityQueue.findMax();
-              //Element thirdFromFront = priorityQueue.getThirdFromFront();
-              //Element secondFromEnd = priorityQueue.getSecondFromEnd();
-              //Element elementBeforeMin = priorityQueue.getElementBeforeMin();
-              //Element elementAfterMax = priorityQueue.getElementAfterMax();
-              setState(() {
-                result = 'Queue Size: $queueSize Min Element: Value: ${minElement.val}';
-              });
-            },
-            child: Text('Queue Info'),
-          ),
+          SizedBox(height: 16),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            // Використовуємо SizedBox для додавання простору між кнопками
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  int val = int.parse(valController.text);
+                  int priority = int.parse(priorityController.text);
+                  Element newElement = Element(val, priority);
+                  priorityQueue.enqueue(newElement);
+                  setState(() {
+                    valController.clear();
+                    priorityController.clear();
+                  });
+                },
+                child: Text('Enqueue'),
+              ),
+              SizedBox(width: 16), // Додано простір шириною 16 між кнопками
+              ElevatedButton(
+                onPressed: () {
+                  Element dequeuedElement = priorityQueue.dequeue();
+                  setState(() {
+                    result = 'Dequeued: Value: ${dequeuedElement.val}, Priority: ${dequeuedElement.priority}';
+                  });
+                },
+                child: Text('Dequeue'),
+              ),
+              SizedBox(width: 16), // Додано простір шириною 16 між кнопками
+              ElevatedButton(
+                onPressed: () {
+                  bool isEmpty = priorityQueue.isEmpty();
+                  setState(() {
+                    result = 'Is Empty: $isEmpty';
+                  });
+                },
+                child: Text('Is Empty'),
+              ),
+              SizedBox(width: 16), // Додано простір шириною 16 між кнопками
+              ElevatedButton(
+                onPressed: () {
+                  int queueSize = priorityQueue.size();
+                  Element minElement = priorityQueue.findMin();
+                  Element maxElement = priorityQueue.findMax();
+                  Element thirdFromFront = priorityQueue.getThirdFromFront();
+                  Element secondFromEnd = priorityQueue.getSecondFromEnd();
+                  Element elementBeforeMin = priorityQueue.getElementBeforeMin();
+                  Element elementAfterMax = priorityQueue.getElementAfterMax();
+                  setState(() {
+                    result = 'Queue Size: $queueSize \nMin: ${minElement.val}\nMax: ${maxElement.val} \nbefore Min: ${elementBeforeMin.val} \nafters Max: ${elementAfterMax.val} \n3rd from front: ${thirdFromFront.val} \n2nd from end: ${secondFromEnd.val}';
+                  });
+                },
+                child: Text('Queue Info'),
+              ),
+            ],
+          ),
+
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Expanded(
                 child: TextField(
@@ -163,23 +184,60 @@ class PriorityQueue {
     return elements.isEmpty;
   }
 
+  // int size() {
+  //   return elements.length;
+  // }
+
   int size() {
-    return elements.length;
+    int count = 0;
+    for (var element in elements) {
+      count++;
+    }
+    return count;
   }
+
+
+  // Element findMin() {
+  //   if (isEmpty()) {
+  //     throw Exception('Queue is empty');
+  //   }
+  //   return elements.first;
+  // }
 
   Element findMin() {
     if (isEmpty()) {
       throw Exception('Queue is empty');
     }
-    return elements.first;
+    Element minElement = elements[0];
+    for (var element in elements) {
+      if (element.val < minElement.val) {
+        minElement = element;
+      }
+    }
+    return minElement;
   }
 
   Element findMax() {
     if (isEmpty()) {
       throw Exception('Queue is empty');
     }
-    return elements.last;
+    Element maxElement = elements[0];
+    for (var element in elements) {
+      if (element.val > maxElement.val) {
+        maxElement = element;
+      }
+    }
+    return maxElement;
   }
+
+
+
+  /*Element findMax() {
+    if (isEmpty()) {
+      throw Exception('Queue is empty');
+    }
+    return elements.last;
+  }*/
 
   Element getThirdFromFront() {
     if (elements.length >= 3) {
@@ -199,8 +257,8 @@ class PriorityQueue {
     if (isEmpty()) {
       throw Exception('Queue is empty');
     }
-    int minPriority = findMin().priority;
-    int index = elements.indexWhere((element) => element.priority == minPriority);
+    int minVal = findMin().val;
+    int index = elements.indexWhere((element) => element.val == minVal);
     if (index > 0) {
       return elements[index - 1];
     }
@@ -211,8 +269,8 @@ class PriorityQueue {
     if (isEmpty()) {
       throw Exception('Queue is empty');
     }
-    int maxPriority = findMax().priority;
-    int index = elements.indexWhere((element) => element.priority == maxPriority);
+    int maxVal = findMax().val;
+    int index = elements.indexWhere((element) => element.val == maxVal);
     if (index < elements.length - 1) {
       return elements[index + 1];
     }
@@ -226,5 +284,9 @@ class PriorityQueue {
       }
     }
     return -1; // Element not found
+  }
+
+  List<Element> getElementsByPriority(int targetPriority) {
+    return elements.where((element) => element.priority == targetPriority).toList();
   }
 }
