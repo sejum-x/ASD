@@ -17,14 +17,26 @@ bool? isQuick = true;
 bool? isMerge = true;
 bool? isCounting = true;
 
+bool? is1024 = true;
+bool? is4096 = true;
+bool? is16384 = true;
+bool? is65536 = true;
+bool? is262144 = false;
+bool? is1048576 = false;
+bool? is4194304 = false;
+
 
 List<int> array = [];
 String sortingResult = '';
-List<int> sizes = [1024, 4096, 16384, 65536, 262144];
+List<int> sizes = [];
+//List<int> sizes = [1024, 4096, 16384, 65536, 262144, 1048576, 4194304];
 List<Map<String, dynamic>> sortingResults = [];
 
-List<String> chartHeight = ["1", "5", "10", "15", "20", "30"];
+List<String> chartHeight = ["1", "5", "10", "15", "20", "30", "50"];
 String choosenHeight = "10";
+
+List<String> chartWidth = ["100", "200", "400", "500", "1000", "1500", "2000", "3000"];
+String choosenWidth = "500";
 
 class SortingInfo {
   final String algorithmName;
@@ -50,189 +62,461 @@ class _Compare extends State<Compare> {
         children: [
           Container(
             height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width * 0.6,
+            width: MediaQuery.of(context).size.width * 0.45,
             color: Color(0xff212930),
             child: showChart ? _LineChart() : SizedBox(), // Відображаємо графік, якщо showChart == true
             //child: _LineChart(),
           ),
           Container(
             height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width * 0.4,
+            width: MediaQuery.of(context).size.width * 0.55,
             color: Color(0xff012430),
             child: Column(
               children: [
                 Container(
                   color: Color(0x0f912130),
-                  height: MediaQuery.of(context).size.height * 0.46,
-                  child: DataTable(
-                    dataRowHeight: 50, // Ви можете змінити висоту рядків за потребою
-                    columns: <DataColumn>[
-                      DataColumn(
-                        label: Text('Array Size', style: TextStyle(color: Colors.white)),
-                      ),
-                      for (int size in sizes)
-                        DataColumn(
-                          label: Text(size.toString(), style: TextStyle(color: Colors.white)),
-                        ),
-                    ],
-                    rows: sortingResults
-                        .map(
-                          (result) => DataRow(
-                        cells: <DataCell>[
-                          DataCell(
-                            Text(
-                              result['SortingType'].toString(),
-                              style: TextStyle(color: Colors.white),
-                            ),
+                  height: MediaQuery.of(context).size.height * 0.40,
+                  child:SingleChildScrollView(
+                    child:
+
+                    Column(
+                      children: [
+                        DataTable(
+                        dataRowHeight: 50, // Ви можете змінити висоту рядків за потребою
+                        columns: <DataColumn>[
+                          DataColumn(
+                            label: Text('Array Size', style: TextStyle(color: Colors.white)),
                           ),
-                          for (double time in result['SortingTimes'])
-                            DataCell(
-                              Text(
-                                time.toStringAsFixed(4),
-                                style: TextStyle(color: Colors.white),
-                              ),
+                          for (int size in sizes)
+                            DataColumn(
+                              label: Text(size.toString(), style: TextStyle(color: Colors.white)),
                             ),
                         ],
-                      ),
-                    )
-                        .toList(),
+                        rows: sortingResults
+                            .map(
+                              (result) => DataRow(
+                            cells: <DataCell>[
+                              DataCell(
+                                Text(
+                                  result['SortingType'].toString(),
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                              for (double time in result['SortingTimes'])
+                                DataCell(
+                                  Text(
+                                    time.toStringAsFixed(4),
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        )
+                            .toList(),
                   ),
+
+                      ],
+                    ),
+
+    ),
 
 
 
                 ),
 
                 Expanded(
-                  child: Container(
-                    color: Color(0xff3b4956),
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    child: Column(
+                  child:
+                    Row(
                       children: [
-                        CheckboxListTile(
-                          title: const Text('Selection'),
-                          value: isSelection,
-                          onChanged: (bool? newValue){
-                          setState(() {
-                             isSelection = newValue;
-                          });
-                          },
-                          activeColor: Colors.orangeAccent,
-                          checkColor: Colors.white,
-                          tileColor: Colors.white10,
-                          controlAffinity: ListTileControlAffinity.leading,
-                          tristate: true,
+                        //chose size
+                        Container(
+                            color: Color(0xff3b4956),
+                            width: MediaQuery.of(context).size.width * 0.25,
+                            child: Column(
+                              children: [
+                                SizedBox(height: 16),
+                                Text(
+                                  "Choose size:",
+                                  // Встановлюємо вирівнювання тексту вліво
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+                                ),
+
+                                CheckboxListTile(
+                                  title: const Text('1024',
+                                    style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                  ),
+                                  value: is1024,
+                                  onChanged: (bool? newValue){
+                                    setState(() {
+                                      is1024 = newValue;
+                                    });
+                                  },
+                                  activeColor: Colors.orangeAccent,
+                                  tileColor: Colors.black12,
+                                  controlAffinity: ListTileControlAffinity.leading,
+                                  selectedTileColor: Colors.white,
+                                  tristate: true,
+                                ),
+                                CheckboxListTile(
+                                  title: const Text(
+                                    '4096',
+                                    style: TextStyle(
+                                    color: Colors.white,
+                                    ),
+                                  ),
+                                  value: is4096,
+                                  onChanged: (bool? newValue){
+                                    setState(() {
+                                      is4096 = newValue;
+                                    });
+                                  },
+                                  activeColor: Colors.orangeAccent,
+                                  checkColor: Colors.white,
+                                  tileColor: Colors.black12,
+                                  controlAffinity: ListTileControlAffinity.leading,
+                                  tristate: true,
+                                ),
+                                CheckboxListTile(
+                                  title: const Text('16384',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  value: is16384,
+                                  onChanged: (bool? newValue){
+                                    setState(() {
+                                      is16384 = newValue;
+                                    });
+                                  },
+                                  activeColor: Colors.orangeAccent,
+                                  checkColor: Colors.white,
+                                  tileColor: Colors.black12,
+                                  controlAffinity: ListTileControlAffinity.leading,
+                                  tristate: true,
+                                ),
+                                CheckboxListTile(
+                                  title: const Text('65536',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  value: is65536,
+                                  onChanged: (bool? newValue){
+                                    setState(() {
+                                      is65536 = newValue;
+                                    });
+                                  },
+                                  activeColor: Colors.orangeAccent,
+                                  checkColor: Colors.white,
+                                  tileColor: Colors.black12,
+                                  controlAffinity: ListTileControlAffinity.leading,
+                                  tristate: true,
+                                ),
+                                CheckboxListTile(
+                                  title: const Text('262144',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  value: is262144,
+                                  onChanged: (bool? newValue){
+                                    setState(() {
+                                      is262144 = newValue;
+                                    });
+                                  },
+                                  activeColor: Colors.orangeAccent,
+                                  checkColor: Colors.white,
+                                  tileColor: Colors.black12,
+                                  controlAffinity: ListTileControlAffinity.leading,
+                                  tristate: true,
+                                ),
+                                CheckboxListTile(
+                                  title: const Text('1048576',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  value: is1048576,
+                                  onChanged: (bool? newValue){
+                                    setState(() {
+                                      is1048576 = newValue;
+                                    });
+                                  },
+                                  activeColor: Colors.orangeAccent,
+                                  checkColor: Colors.white,
+                                  tileColor: Colors.black12,
+                                  controlAffinity: ListTileControlAffinity.leading,
+                                  tristate: true,
+                                ),
+                                CheckboxListTile(
+                                  title: const Text('4194304',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  value: is4194304,
+                                  onChanged: (bool? newValue){
+                                    setState(() {
+                                      is4194304 = newValue;
+                                    });
+                                  },
+                                  activeColor: Colors.orangeAccent,
+                                  checkColor: Colors.white,
+                                  tileColor: Colors.black12,
+                                  controlAffinity: ListTileControlAffinity.leading,
+                                  tristate: true,
+                                ),
+                              ],
+
+
+                            )
                         ),
 
-                        CheckboxListTile(
-                          title: const Text('Shell'),
-                          value: isShell,
-                          onChanged: (bool? newValue){
-                            setState(() {
-                              isShell = newValue;
-                            });
-                          },
-                          activeColor: Colors.orangeAccent,
-                          checkColor: Colors.white,
-                          tileColor: Colors.black12,
-                          controlAffinity: ListTileControlAffinity.leading,
-                          tristate: true,
-                        ),
+                        //Show method
+                        Container(
+                          color: Color(0xff3b4956),
+                          width: MediaQuery.of(context).size.width * 0.3,
+                          child: Column(
+                            children: [
+                              SizedBox(height: 16),
+                              Text(
+                                "Show method:",
+                                // Встановлюємо вирівнювання тексту вліво
+                                textAlign: TextAlign.left,
+                                style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+                              ),
+                                    CheckboxListTile(
+                                      title: const Text('Selection',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      value: isSelection,
+                                      onChanged: (bool? newValue){
+                                        setState(() {
+                                          isSelection = newValue;
+                                        });
+                                      },
+                                      activeColor: Colors.orangeAccent,
+                                      checkColor: Colors.white,
+                                      tileColor: Colors.white10,
+                                      controlAffinity: ListTileControlAffinity.leading,
+                                      tristate: true,
+                                    ),
 
-                        CheckboxListTile(
-                          title: const Text('Quick'),
-                          value: isQuick,
-                          onChanged: (bool? newValue){
-                            setState(() {
-                              isQuick = newValue;
-                            });
-                          },
-                          activeColor: Colors.orangeAccent,
-                          checkColor: Colors.white,
-                          tileColor: Colors.black12,
-                          controlAffinity: ListTileControlAffinity.leading,
-                          tristate: true,
-                        ),
+                                    CheckboxListTile(
+                                      title: const Text('Shell',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),),
+                                      value: isShell,
+                                      onChanged: (bool? newValue){
+                                        setState(() {
+                                          isShell = newValue;
+                                        });
+                                      },
+                                      activeColor: Colors.orangeAccent,
+                                      checkColor: Colors.white,
+                                      tileColor: Colors.black12,
+                                      controlAffinity: ListTileControlAffinity.leading,
+                                      tristate: true,
+                                    ),
 
-                        CheckboxListTile(
-                          title: const Text('Merge'),
-                          value: isMerge,
-                          onChanged: (bool? newValue){
-                            setState(() {
-                              isMerge = newValue;
-                            });
-                          },
-                          activeColor: Colors.orangeAccent,
-                          checkColor: Colors.white,
-                          tileColor: Colors.black12,
-                          controlAffinity: ListTileControlAffinity.leading,
-                          tristate: true,
-                        ),
+                                    CheckboxListTile(
+                                      title: const Text('Quick',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),),
+                                      value: isQuick,
+                                      onChanged: (bool? newValue){
+                                        setState(() {
+                                          isQuick = newValue;
+                                        });
+                                      },
+                                      activeColor: Colors.orangeAccent,
+                                      checkColor: Colors.white,
+                                      tileColor: Colors.black12,
+                                      controlAffinity: ListTileControlAffinity.leading,
+                                      tristate: true,
+                                    ),
 
-                        CheckboxListTile(
-                          title: const Text('Counting'),
-                          value: isCounting,
-                          onChanged: (bool? newValue){
-                            setState(() {
-                              isCounting = newValue;
-                            });
-                          },
-                          activeColor: Colors.orangeAccent,
-                          checkColor: Colors.white,
-                          tileColor: Colors.black12,
-                          controlAffinity: ListTileControlAffinity.leading,
-                          tristate: true,
-                        ),
+                                    CheckboxListTile(
+                                      title: const Text('Merge',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),),
+                                      value: isMerge,
+                                      onChanged: (bool? newValue){
+                                        setState(() {
+                                          isMerge = newValue;
+                                        });
+                                      },
+                                      activeColor: Colors.orangeAccent,
+                                      checkColor: Colors.white,
+                                      tileColor: Colors.black12,
+                                      controlAffinity: ListTileControlAffinity.leading,
+                                      tristate: true,
+                                    ),
 
-                        Row(
-                          children: [
-                        SizedBox(width: 16), // Простір між кнопками
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              generateArray();
-                            });
-                          },
-                          child: Text('Sort'),
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 16), // Додайте відступи
+                                    CheckboxListTile(
+                                      title: const Text('Counting',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),),
+                                      value: isCounting,
+                                      onChanged: (bool? newValue){
+                                        setState(() {
+                                          isCounting = newValue;
+                                        });
+                                      },
+                                      activeColor: Colors.orangeAccent,
+                                      checkColor: Colors.white,
+                                      tileColor: Colors.black12,
+                                      controlAffinity: ListTileControlAffinity.leading,
+                                      tristate: true,
+                                    ),
+
+                              Row(
+                                children: [
+                                  SizedBox(width: 20),
+                                  Text(
+                                    "Chose chart height:",
+                                    style: TextStyle(color: Colors.white),
+
+
+                                  ),
+                                  SizedBox(width: 16),
+                                  DropdownButton(
+
+                                    hint: Text("Select height",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    dropdownColor: Colors.grey,
+                                    value: choosenHeight,
+                                    onChanged: (newValue){
+                                      setState(() {
+                                        choosenHeight = newValue!;
+                                      });
+                                    },
+                                    items: chartHeight.map((valueItem){
+                                      return DropdownMenuItem(
+                                        value: valueItem,
+                                        child: Text(valueItem),
+                                      );
+                                    }).toList(),
+                                  ),
+
+
+                                ],
+                              ),
+
+                              Row(
+                                children: [
+                                  SizedBox(width: 20),
+                                  Text(
+                                    "Chose chart width:",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  SizedBox(width: 16),
+                                  DropdownButton(
+
+                                    hint: Text("Select height",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    dropdownColor: Colors.grey,
+                                    value: choosenWidth,
+                                    onChanged: (newVal){
+                                      setState(() {
+                                        choosenWidth = newVal!;
+                                      });
+                                    },
+                                    items: chartWidth.map((valItem){
+                                      return DropdownMenuItem(
+                                        value: valItem,
+                                        child: Text(valItem),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ],
+                              ),
+
+                              Row(
+                                children: [
+                              SizedBox(width: 16), // Простір між кнопками
+                              ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    sizes.clear();
+
+                                    if (is1024 == true) {
+                                      sizes.add(1024);
+                                    }
+
+                                    if (is4096 == true) {
+                                      sizes.add(4096);
+                                    }
+
+                                    if (is16384 == true) {
+                                      sizes.add(16384);
+                                    }
+
+                                    if (is65536 == true) {
+                                      sizes.add(65536);
+                                    }
+
+                                    if (is262144 == true) {
+                                      sizes.add(262144);
+                                    }
+
+                                    if (is1048576 == true) {
+                                      sizes.add(1048576);
+                                    }
+
+                                    if (is4194304 == true) {
+                                      sizes.add(4194304);
+                                    }
+                                    generateArray();
+                                  });
+                                },
+                                child: Text('Sort'),
+                                style: ElevatedButton.styleFrom(
+                                  padding: EdgeInsets.symmetric(vertical: 16), // Додайте відступи
+                                ),
+                              ),
+                              SizedBox(width: 16), // Простір між кнопками
+                              ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    showChart = !showChart; // Змінюємо стан, коли кнопка натиснута
+                                  });
+                                },
+                                child: Text(showChart ? 'Hide' : 'Show'),
+                                style: ElevatedButton.styleFrom(
+                                  padding: EdgeInsets.symmetric(vertical: 16), // Додайте відступи
+                                ),
+                              ),
+                                  SizedBox(width: 16),
+
+                                  //
+
+
+                              ],
+                              ),
+                            ],
                           ),
-                        ),
-                        SizedBox(width: 16), // Простір між кнопками
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              showChart = !showChart; // Змінюємо стан, коли кнопка натиснута
-                            });
-                          },
-                          child: Text(showChart ? 'Hide' : 'Show'),
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 16), // Додайте відступи
-                          ),
-                        ),
-                            SizedBox(width: 16),
-                            DropdownButton(
-                              hint: Text("Select height"),
-                              dropdownColor: Colors.grey,
-                              value: choosenHeight,
-                              onChanged: (newValue){
-                                setState(() {
-                                  choosenHeight = newValue!;
-                                });
-                              },
-                              items: chartHeight.map((valueItem){
-                                return DropdownMenuItem(
-                                  value: valueItem,
-                                  child: Text(valueItem),
-                                );
-                              }).toList(),
-                            ),
 
-                        ],
                         ),
-                      ],
-                    ),
 
+                      ]
                   ),
+
                 ),
               ],
             ),
@@ -245,6 +529,7 @@ class _Compare extends State<Compare> {
 //table
 
 void generateArray() {
+
   sortingResults.clear();
   for (var sortingAlgorithm in [SortingHelper.selectionSort, SortingHelper.shellSort, SortingHelper.quickSort, SortingHelper.countingSort, SortingHelper.mergeSort]) {
     List<double> sortingTimes = [];
@@ -286,7 +571,7 @@ LineChartData get sampleData1 => LineChartData(
   borderData: boarderData,
   lineBarsData: getLineBarsData(), // Use the dynamic data here
   minX: 0,
-  maxX: 500, // Adjust these values as needed
+  maxX: double.tryParse(choosenWidth), // Adjust these values as needed
   minY: 0,
   maxY: double.tryParse(choosenHeight), // Adjust these values as needed
 );

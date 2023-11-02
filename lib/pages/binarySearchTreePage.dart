@@ -272,8 +272,44 @@ class _BinarySearchTreePageState extends State<BinarySearchTreePage> {
             },
             child: Text('Tree Info'),
           ),
+          Container(
+            height: 200, // Set a fixed height for the container
+            child: SingleChildScrollView(
+              child: buildTreeWidget(binarySearchTree.root, '', true),
+            ),
+          ),
+
         ],
       ),
     );
   }
+}
+
+
+Widget buildTreeWidget(Node? node, String prefix, bool isLeft) {
+  if (node == null) {
+    return SizedBox.shrink();
+  }
+
+  return Column(
+    children: [
+      Row(
+        children: [
+          Text(
+            '$prefix${isLeft ? '├─----' : '└─----'}',
+            style: TextStyle(color: Colors.white),
+          ),
+          Text(
+            '${node.value}',
+            style: TextStyle(color: Colors.white),
+          ),
+        ],
+      ),
+      SizedBox(height: 8), // Adjust the spacing as needed
+
+      // Recursively build the left and right subtrees
+      buildTreeWidget(node.left, '$prefix${isLeft ? '│        ' : '          '}', true),
+      buildTreeWidget(node.right, '$prefix${isLeft ? '│        ' : '          '}', false),
+    ],
+  );
 }

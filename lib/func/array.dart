@@ -41,14 +41,16 @@ class SortingHelper {
     return array;
   }
 
-  static List<int> quickSort(List<int> array) {
+  /*static List<int> quickSort(List<int> array) {
     if (array.length <= 1) return array;
 
-    int pivot = array[0];
+    int pivotIndex = (array.length / 2).floor();
+    int pivot = array[pivotIndex];
     List<int> left = [];
     List<int> right = [];
 
-    for (int i = 1; i < array.length; i++) {
+    for (int i = 0; i < array.length; i++) {
+      if (i == pivotIndex) continue; // Пропустити опорний елемент
       if (array[i] <= pivot) {
         left.add(array[i]);
       } else {
@@ -60,7 +62,39 @@ class SortingHelper {
     List<int> sortedRight = quickSort(right);
 
     return [...sortedLeft, pivot, ...sortedRight];
+  }*/
+  static List<int> quickSort(List<int> array) {
+    if (array.length <= 1) return array;
+    return _quickSort(array, 0, array.length - 1);
   }
+
+  static List<int> _quickSort(List<int> array, int low, int high) {
+    if (low < high) {
+      int pivotIndex = _partition(array, low, high);
+      _quickSort(array, low, pivotIndex - 1);
+      _quickSort(array, pivotIndex + 1, high);
+    }
+    return array;
+  }
+
+  static int _partition(List<int> array, int low, int high) {
+    int pivot = array[high];
+    int i = low - 1;
+    for (int j = low; j < high; j++) {
+      if (array[j] <= pivot) {
+        i++;
+        int temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+      }
+    }
+    int temp = array[i + 1];
+    array[i + 1] = array[high];
+    array[high] = temp;
+    return i + 1;
+  }
+
+
 
   static double measureSortingTime(List<int> Function(List<int>) sortingAlgorithm, List<int> array) {
     final stopwatch = Stopwatch()..start();
