@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 class Element {
   int val;
@@ -16,10 +17,15 @@ class PriorityQueuePage extends StatefulWidget {
 
 class _PriorityQueuePage extends State<PriorityQueuePage> {
   PriorityQueue priorityQueue = PriorityQueue();
+  PriorityQueue randPriorityQueue = PriorityQueue();
   String result = '';
   TextEditingController valController = TextEditingController();
   TextEditingController priorityController = TextEditingController();
   TextEditingController searchController = TextEditingController();
+
+  TextEditingController randPQsize = TextEditingController();
+  TextEditingController randPQmaxPrio = TextEditingController();
+  TextEditingController randPQmaxVal = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +38,15 @@ class _PriorityQueuePage extends State<PriorityQueuePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+
+                //output
                 Text(
                   "Elements in Priority Queue:",
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
                 ),
+                SizedBox(height: 20),
                 Container(
-                  height: 200,
+                  height: 230,
                   width: 170,// Set a fixed height for the container
                   child: ListView(
                     physics: AlwaysScrollableScrollPhysics(), // Allow scrolling
@@ -55,22 +64,32 @@ class _PriorityQueuePage extends State<PriorityQueuePage> {
             ),
           ),
 
-
-
           SizedBox(height: 20),
           Row(
             children: [
               Expanded(
-                child: TextField(
-                  controller: valController,
-                  decoration: InputDecoration(labelText: 'Value'),
-                ),
+                  child: TextField(
+                    controller: valController,
+                    decoration: InputDecoration(
+                      labelText: 'Value',
+                      labelStyle: TextStyle(color: Colors.white), // Змінюємо колір тексту мітки на білий
+                      hintStyle: TextStyle(color: Colors.white), // Змінюємо колір підказки на білий
+                    ),
+                    style: TextStyle(color: Colors.white), // Змінюємо колір тексту введення на білий
+                  )
+
               ),
               SizedBox(width: 10),
               Expanded(
                 child: TextField(
                   controller: priorityController,
-                  decoration: InputDecoration(labelText: 'Priority'),
+                  decoration: InputDecoration(
+                    labelText: 'Priority',
+                    labelStyle: TextStyle(color: Colors.white), // Змінюємо колір тексту мітки на білий
+                    hintStyle: TextStyle(color: Colors.white), // Змінюємо колір підказки на білий
+                  ),
+                    style: TextStyle(color: Colors.white), // Змінюємо колір тексту введення на білий
+
                 ),
               ),
             ],
@@ -80,6 +99,8 @@ class _PriorityQueuePage extends State<PriorityQueuePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             // Використовуємо SizedBox для додавання простору між кнопками
             children: [
+
+              // enqueue
               ElevatedButton(
                 onPressed: () {
                   int val = int.parse(valController.text);
@@ -93,7 +114,9 @@ class _PriorityQueuePage extends State<PriorityQueuePage> {
                 },
                 child: Text('Enqueue'),
               ),
-              SizedBox(width: 16), // Додано простір шириною 16 між кнопками
+
+              // dequeue
+              SizedBox(width: 16), //
               ElevatedButton(
                 onPressed: () {
                   Element dequeuedElement = priorityQueue.dequeue();
@@ -103,7 +126,9 @@ class _PriorityQueuePage extends State<PriorityQueuePage> {
                 },
                 child: Text('Dequeue'),
               ),
-              SizedBox(width: 16), // Додано простір шириною 16 між кнопками
+
+              // isempty bt
+              SizedBox(width: 16),
               ElevatedButton(
                 onPressed: () {
                   bool isEmpty = priorityQueue.isEmpty();
@@ -113,6 +138,8 @@ class _PriorityQueuePage extends State<PriorityQueuePage> {
                 },
                 child: Text('Is Empty'),
               ),
+
+              //get info bt
               SizedBox(width: 16), // Додано простір шириною 16 між кнопками
               ElevatedButton(
                 onPressed: () {
@@ -124,22 +151,108 @@ class _PriorityQueuePage extends State<PriorityQueuePage> {
                   Element elementBeforeMin = priorityQueue.getElementBeforeMin();
                   Element elementAfterMax = priorityQueue.getElementAfterMax();
                   setState(() {
-                    result = 'Queue Size: $queueSize \nMin: ${minElement.val}\nMax: ${maxElement.val} \nbefore Min: ${elementBeforeMin.val} \nafters Max: ${elementAfterMax.val} \n3rd from front: ${thirdFromFront.val} \n2nd from end: ${secondFromEnd.val}';
+                    result = 'Queue Size: $queueSize \nMin: ${minElement.val}\nMax: ${maxElement.val} \nBefore Min: ${elementBeforeMin.val} \nAfters Max: ${elementAfterMax.val} \n3rd from front: ${thirdFromFront.val} \n2nd from end: ${secondFromEnd.val}';
                   });
                 },
                 child: Text('Queue Info'),
               ),
+
+              //clear bt
+              SizedBox(width: 16),
+              ElevatedButton(
+                  onPressed: () {
+                    priorityQueue.clear();
+
+                    setState(() {
+                      result = 'Queue cleared';
+                    });
+                  },
+                  child: Text('Clear')),
             ],
           ),
 
+          // get data for rand
+          SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: randPQsize,
+                  decoration: InputDecoration(labelText: 'Size',
+                  labelStyle: TextStyle(color: Colors.white), // Змінюємо колір тексту мітки на білий
+                  hintStyle: TextStyle(color: Colors.white), // Змінюємо колір підказки на білий
+                  ),
+                  style: TextStyle(color: Colors.white),// Змінюємо колір тексту введення на білий
 
+                ),
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                child: TextField(
+                  controller: randPQmaxPrio,
+                  decoration: InputDecoration(labelText: 'Max priority',
+                    labelStyle: TextStyle(color: Colors.white), // Змінюємо колір тексту мітки на білий
+                    hintStyle: TextStyle(color: Colors.white), // Змінюємо колір підказки на білий
+                  ),
+                  style: TextStyle(color: Colors.white), // Змінюємо колір тексту введення на білий
+
+                ),
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                child: TextField(
+                  controller: randPQmaxVal,
+                  decoration: InputDecoration(labelText: 'Max value',
+                    labelStyle: TextStyle(color: Colors.white), // Змінюємо колір тексту мітки на білий
+                    hintStyle: TextStyle(color: Colors.white), // Змінюємо колір підказки на білий
+                  ),
+                  style: TextStyle(color: Colors.white), // Змінюємо колір тексту введення на білий
+
+                ),
+              ),
+            ],
+          ),
+
+          // rand + merge bt
+          SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  randPriorityQueue.generateRandomQueue( int.parse(randPQsize.text), int.parse(randPQmaxPrio.text), int.parse(randPQmaxVal.text));
+                  setState(() {
+                    result = 'Random queue generated';
+                  });
+                },
+                child: Text('Generate rand'),
+              ),
+              SizedBox(width: 16), // Додано простір шириною 16 між кнопками
+              ElevatedButton(
+                onPressed: () {
+                  priorityQueue.merge(randPriorityQueue);
+                  setState(() {
+                    result = 'Merged';
+                  });
+                },
+                child: Text('Merge'),
+              ),
+            ],
+          ),
+
+          //search position
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Expanded(
                 child: TextField(
                   controller: searchController,
-                  decoration: InputDecoration(labelText: 'Search Value'),
+                  decoration: InputDecoration(labelText: 'Search Value',
+                    labelStyle: TextStyle(color: Colors.white), // Змінюємо колір тексту мітки на білий
+                    hintStyle: TextStyle(color: Colors.white), // Змінюємо колір підказки на білий
+                  ),
+                  style: TextStyle(color: Colors.white), // Змінюємо колір тексту введення на білий
+
                 ),
               ),
               ElevatedButton(
@@ -155,6 +268,8 @@ class _PriorityQueuePage extends State<PriorityQueuePage> {
             ],
           ),
           SizedBox(height: 20),
+
+          // output
           Text(
             result,
             style: TextStyle(color: Colors.white),
@@ -288,5 +403,59 @@ class PriorityQueue {
 
   List<Element> getElementsByPriority(int targetPriority) {
     return elements.where((element) => element.priority == targetPriority).toList();
+  }
+
+  void merge(PriorityQueue otherQueue) {
+    // Create an empty list to store the merged elements
+    List<Element> mergedElements = [];
+
+    int i = 0;
+    int j = 0;
+
+    // Merge the elements while maintaining the sorted order
+    while (i < elements.length && j < otherQueue.elements.length) {
+      if (elements[i].priority < otherQueue.elements[j].priority) {
+        mergedElements.add(elements[i]);
+        i++;
+      } else {
+        mergedElements.add(otherQueue.elements[j]);
+        j++;
+      }
+    }
+
+    // Add any remaining elements from both queues
+    while (i < elements.length) {
+      mergedElements.add(elements[i]);
+      i++;
+    }
+
+    while (j < otherQueue.elements.length) {
+      mergedElements.add(otherQueue.elements[j]);
+      j++;
+    }
+
+    // Replace the original elements with the merged elements
+    elements = mergedElements;
+  }
+
+
+  void generateRandomQueue(int size, int maxPriority, int maxValue) {
+    // Clear the current elements to create a new queue.
+    elements.clear();
+
+    final random = Random();
+
+    for (int i = 0; i < size; i++) {
+      // Generate a random value and priority within the specified range.
+      int val = random.nextInt(maxValue + 1);
+      int priority = random.nextInt(maxPriority + 1);
+
+      Element element = Element(val, priority);
+
+      enqueue(element);
+    }
+  }
+  void clear() {
+    elements.clear();
   }
 }

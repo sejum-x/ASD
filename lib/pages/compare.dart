@@ -32,7 +32,7 @@ List<int> sizes = [];
 //List<int> sizes = [1024, 4096, 16384, 65536, 262144, 1048576, 4194304];
 List<Map<String, dynamic>> sortingResults = [];
 
-List<String> chartHeight = ["1", "5", "10", "15", "20", "30", "50"];
+List<String> chartHeight = ["0.1","1", "5", "10", "15", "20", "30", "50"];
 String choosenHeight = "10";
 
 List<String> chartWidth = ["100", "200", "400", "500", "1000", "1500", "2000", "3000"];
@@ -291,7 +291,7 @@ class _Compare extends State<Compare> {
                                     CheckboxListTile(
                                       title: const Text('Selection',
                                         style: TextStyle(
-                                          color: Colors.white,
+                                          color: Colors.red,
                                         ),
                                       ),
                                       value: isSelection,
@@ -300,7 +300,7 @@ class _Compare extends State<Compare> {
                                           isSelection = newValue;
                                         });
                                       },
-                                      activeColor: Colors.orangeAccent,
+                                      activeColor: Colors.red,
                                       checkColor: Colors.white,
                                       tileColor: Colors.white10,
                                       controlAffinity: ListTileControlAffinity.leading,
@@ -310,7 +310,7 @@ class _Compare extends State<Compare> {
                                     CheckboxListTile(
                                       title: const Text('Shell',
                                         style: TextStyle(
-                                          color: Colors.white,
+                                          color: Colors.purple,
                                         ),),
                                       value: isShell,
                                       onChanged: (bool? newValue){
@@ -318,7 +318,7 @@ class _Compare extends State<Compare> {
                                           isShell = newValue;
                                         });
                                       },
-                                      activeColor: Colors.orangeAccent,
+                                      activeColor: Colors.purple,
                                       checkColor: Colors.white,
                                       tileColor: Colors.black12,
                                       controlAffinity: ListTileControlAffinity.leading,
@@ -328,7 +328,7 @@ class _Compare extends State<Compare> {
                                     CheckboxListTile(
                                       title: const Text('Quick',
                                         style: TextStyle(
-                                          color: Colors.white,
+                                          color: Colors.blue,
                                         ),),
                                       value: isQuick,
                                       onChanged: (bool? newValue){
@@ -336,7 +336,7 @@ class _Compare extends State<Compare> {
                                           isQuick = newValue;
                                         });
                                       },
-                                      activeColor: Colors.orangeAccent,
+                                      activeColor: Colors.blue,
                                       checkColor: Colors.white,
                                       tileColor: Colors.black12,
                                       controlAffinity: ListTileControlAffinity.leading,
@@ -346,7 +346,7 @@ class _Compare extends State<Compare> {
                                     CheckboxListTile(
                                       title: const Text('Merge',
                                         style: TextStyle(
-                                          color: Colors.white,
+                                          color: Colors.pink,
                                         ),),
                                       value: isMerge,
                                       onChanged: (bool? newValue){
@@ -354,7 +354,7 @@ class _Compare extends State<Compare> {
                                           isMerge = newValue;
                                         });
                                       },
-                                      activeColor: Colors.orangeAccent,
+                                      activeColor: Colors.pink,
                                       checkColor: Colors.white,
                                       tileColor: Colors.black12,
                                       controlAffinity: ListTileControlAffinity.leading,
@@ -364,7 +364,7 @@ class _Compare extends State<Compare> {
                                     CheckboxListTile(
                                       title: const Text('Counting',
                                         style: TextStyle(
-                                          color: Colors.white,
+                                          color: Colors.green,
                                         ),),
                                       value: isCounting,
                                       onChanged: (bool? newValue){
@@ -372,7 +372,7 @@ class _Compare extends State<Compare> {
                                           isCounting = newValue;
                                         });
                                       },
-                                      activeColor: Colors.orangeAccent,
+                                      activeColor: Colors.green,
                                       checkColor: Colors.white,
                                       tileColor: Colors.black12,
                                       controlAffinity: ListTileControlAffinity.leading,
@@ -879,7 +879,7 @@ Widget bottomTitlesWidget(double value, TitleMeta meta){
 }
 
 SideTitles get bottomTitles => SideTitles(
-  showTitles: true,
+  showTitles: false,
   reservedSize: 32,
   interval: 1,
   getTitlesWidget: bottomTitlesWidget,
