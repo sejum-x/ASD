@@ -4,34 +4,48 @@ class Node {
   int value;
   Node? left;
   Node? right;
+  Node? parent;
 
-  Node(this.value, {this.left, this.right});
+  Node(this.value, {this.left, this.right, this.parent});
 }
 
 class BinarySearchTree {
   Node? root;
 
   BinarySearchTree() {
-    root = null; // Initialize root to null in the constructor
+    root = null;
   }
 
   void insert(int value) {
-    root = _insertRec(root, value);
+    root = _insertRec(root, null, value);                                                                                                   // Передаємо null як батьківський вузол при вставці кореня
   }
 
-  Node _insertRec(Node? root, int value) {
+  Node _insertRec(Node? root, Node? parent, int value) {
     if (root == null) {
-      return Node(value);
+      return Node(value, parent: parent);
     }
 
     if (value < root.value) {
-      root.left = _insertRec(root.left, value);
+      root.left = _insertRec(root.left, root, value);
     } else if (value > root.value) {
-      root.right = _insertRec(root.right, value);
+      root.right = _insertRec(root.right, root, value);
     }
 
     return root;
   }
+
+  void preorderTraversal(List<int> result) {
+    _preorderTraversalRec(root, result);
+  }
+
+  void _preorderTraversalRec(Node? root, List<int> result) {
+    if (root != null) {
+      result.add(root.value);
+      _preorderTraversalRec(root.left, result);
+      _preorderTraversalRec(root.right, result);
+    }
+  }
+
 
   void inorderTraversal(List<int> result) {
     _inorderTraversalRec(root, result);
@@ -83,7 +97,7 @@ class BinarySearchTree {
 
   int _findHeightRec(Node? root) {
     if (root == null) {
-      return -1;
+      return 0;
     }
 
     int leftHeight = _findHeightRec(root.left);
@@ -156,7 +170,58 @@ class BinarySearchTree {
     return result;
   }
 
+  Node? getParent(int value) {
+    return _getParentRec(root, null, value);
+  }
 
+  Node? _getParentRec(Node? root, Node? parent, int value) {
+    if (root == null) {
+      return null;
+    }
+
+    if (root.value == value) {
+      return parent;
+    }
+
+    if (value < root.value) {
+      return _getParentRec(root.left, root, value);
+    } else {
+      return _getParentRec(root.right, root, value);
+    }
+  }
+
+  List<int> getChildren(int value) {
+    List<int> children = [];
+    Node? node = _findNode(root, value);
+
+    if (node != null) {
+      if (node.left != null) {
+        children.add(node.left!.value);
+      }
+
+      if (node.right != null) {
+        children.add(node.right!.value);
+      }
+    }
+
+    return children;
+  }
+
+  Node? _findNode(Node? root, int value) {
+    if (root == null) {
+      return null;
+    }
+
+    if (root.value == value) {
+      return root;
+    }
+
+    if (value < root.value) {
+      return _findNode(root.left, value);
+    } else {
+      return _findNode(root.right, value);
+    }
+  }
 }
 
 class BinarySearchTreePage extends StatefulWidget {
@@ -166,14 +231,14 @@ class BinarySearchTreePage extends StatefulWidget {
   State<BinarySearchTreePage> createState() => _BinarySearchTreePageState();
 }
 
-// Ваш BinarySearchTreePage
-
 class _BinarySearchTreePageState extends State<BinarySearchTreePage> {
   BinarySearchTree binarySearchTree = BinarySearchTree();
   List<int> traversalResult = [];
   List<int> traversalResult2 = [];
+  List<int> preorderTravelResult = [];
 
   TextEditingController valueController = TextEditingController();
+  TextEditingController isContainsValue = TextEditingController();
 
   void insertValue() {
     int value = int.tryParse(valueController.text) ?? 0;
@@ -182,8 +247,9 @@ class _BinarySearchTreePageState extends State<BinarySearchTreePage> {
     setState(() {
       traversalResult.clear();
       traversalResult2.clear();
-      binarySearchTree.inorderTraversal(traversalResult);
+      //binarySearchTree.inorderTraversal(traversalResult);
       binarySearchTree.postorderTraversal(traversalResult2);
+      binarySearchTree.preorderTraversal(preorderTravelResult);
     });
   }
 
@@ -192,36 +258,43 @@ class _BinarySearchTreePageState extends State<BinarySearchTreePage> {
     return Scaffold(
       backgroundColor: Color(0xff212930),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        //mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            height: MediaQuery.of(context).size.height * 0.1,
-            width: MediaQuery.of(context).size.width,
-            color: Color(0xff012430),
-            child: Text(
-              "Binary Search Tree",
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
           SizedBox(height: 20),
           Text(
             "Binary Search Tree Values:",
             style: TextStyle(color: Colors.white),
           ),
-          Column(
-            children: [
-              ...traversalResult.map((value) => Text('$value', style: TextStyle(color: Colors.white)),
-              ),/*
+
+
+        Container(
+          height: 200,
+          width: 100,
+        child: SingleChildScrollView(
+              child: Column(
+              children: [
+                /*...preorderTravelResult.map((value) => Text('$value', style: TextStyle(color: Colors.white)),
+               ),*/
               ...traversalResult2.map((value) => Text('$value', style: TextStyle(color: Colors.white)),
-              ),*/
-            ],
-          ),
+               ),
+             ],
+            ),
+         ),
+        ),
+
+
+
           Row(
             children: [
               Expanded(
                 child: TextField(
                   controller: valueController,
-                  decoration: InputDecoration(labelText: 'Value'),
+                  decoration: InputDecoration(
+                    labelText: 'Value',
+                    labelStyle: TextStyle(color: Colors.white), // Змінюємо колір тексту мітки на білий
+                    hintStyle: TextStyle(color: Colors.white), // Змінюємо колір підказки на білий
+                  ),
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
               ElevatedButton(
@@ -230,15 +303,71 @@ class _BinarySearchTreePageState extends State<BinarySearchTreePage> {
               ),
             ],
           ),
+
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: isContainsValue,
+                  decoration: InputDecoration(
+                    labelText: 'Value',
+                    labelStyle: TextStyle(color: Colors.white),
+                    hintStyle: TextStyle(color: Colors.white),
+                  ),
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  int value = int.tryParse(isContainsValue.text) ?? 0;
+                  bool isConsist = binarySearchTree.contains(value);
+                  Node? parent = binarySearchTree.getParent(value);
+                  List<int> children = binarySearchTree.getChildren(value);
+
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('Element Check'),
+                        content: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('Element $value is ${isConsist ? 'present' : 'not present'} in the tree', style: TextStyle(color: Colors.black)),
+                            if (parent != null) Text('Parent: ${parent.value}', style: TextStyle(color: Colors.black)),
+                            if (children.isNotEmpty) Text('Children: ${children.join(", ")}', style: TextStyle(color: Colors.black)),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Close'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                child: Text('Element info'),
+              ),
+            ],
+          ),
+
+
+
           SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
               int height = binarySearchTree.findHeight();
               setState(() {
-                traversalResult.clear();
-                traversalResult2.clear();
-                binarySearchTree.inorderTraversal(traversalResult);
-                binarySearchTree.postorderTraversal(traversalResult2);
+                //traversalResult.clear();
+                //traversalResult2.clear();
+                preorderTravelResult.clear();
+                //binarySearchTree.inorderTraversal(traversalResult);
+                //binarySearchTree.postorderTraversal(traversalResult2);
+                binarySearchTree.preorderTraversal(preorderTravelResult);
                 showDialog(
                   context: context,
                   builder: (context) {
@@ -249,8 +378,9 @@ class _BinarySearchTreePageState extends State<BinarySearchTreePage> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text('Height: $height', style: TextStyle(color: Colors.black)),
-                          Text('Values: ${traversalResult.join(", ")}', style: TextStyle(color: Colors.black)),
-                          Text('Values: ${traversalResult2.join(", ")}', style: TextStyle(color: Colors.black)),
+                          //Text('Values: ${traversalResult.join(", ")}', style: TextStyle(color: Colors.black)),
+                         //Text('Values: ${traversalResult2.join(", ")}', style: TextStyle(color: Colors.black)),
+                          Text('Values: ${preorderTravelResult.join(", ")}', style: TextStyle(color: Colors.black)),
                         ],
                       ),
                       actions: [
@@ -266,14 +396,13 @@ class _BinarySearchTreePageState extends State<BinarySearchTreePage> {
                 );
               });
 
-              // Додайте виклик printTree() для виводу дерева
               binarySearchTree.printTree();
               binarySearchTree.printTreeFormatted();
             },
             child: Text('Tree Info'),
           ),
           Container(
-            height: 200, // Set a fixed height for the container
+            height: 340,
             child: SingleChildScrollView(
               child: buildTreeWidget(binarySearchTree.root, '', true),
             ),
@@ -296,12 +425,12 @@ Widget buildTreeWidget(Node? node, String prefix, bool isLeft) {
       Row(
         children: [
           Text(
-            '$prefix${isLeft ? '├─----' : '└─----'}',
-            style: TextStyle(color: Colors.white),
+            '$prefix${isLeft ? '├─────[' : '└─────['}',
+            style: TextStyle(color: Colors.white, fontSize: 20 ),
           ),
           Text(
             '${node.value}',
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.white, fontSize: 20),
           ),
         ],
       ),

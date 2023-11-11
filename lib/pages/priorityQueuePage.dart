@@ -47,9 +47,9 @@ class _PriorityQueuePage extends State<PriorityQueuePage> {
                 SizedBox(height: 20),
                 Container(
                   height: 230,
-                  width: 170,// Set a fixed height for the container
+                  width: 170,
                   child: ListView(
-                    physics: AlwaysScrollableScrollPhysics(), // Allow scrolling
+                    physics: AlwaysScrollableScrollPhysics(),
                     children: priorityQueue.elements
                         .map((element) => Text(
                         'Value: ${element.val}, Priority: ${element.priority}',
@@ -59,7 +59,6 @@ class _PriorityQueuePage extends State<PriorityQueuePage> {
                 ),
 
                 SizedBox(height: 20),
-                // Додатковий контент, який буде прокручуватися разом із списком
               ],
             ),
           ),
@@ -67,6 +66,7 @@ class _PriorityQueuePage extends State<PriorityQueuePage> {
           SizedBox(height: 20),
           Row(
             children: [
+              SizedBox(width: 20),
               Expanded(
                   child: TextField(
                     controller: valController,
@@ -85,19 +85,20 @@ class _PriorityQueuePage extends State<PriorityQueuePage> {
                   controller: priorityController,
                   decoration: InputDecoration(
                     labelText: 'Priority',
-                    labelStyle: TextStyle(color: Colors.white), // Змінюємо колір тексту мітки на білий
-                    hintStyle: TextStyle(color: Colors.white), // Змінюємо колір підказки на білий
+                    labelStyle: TextStyle(color: Colors.white),
+                    hintStyle: TextStyle(color: Colors.white),
                   ),
-                    style: TextStyle(color: Colors.white), // Змінюємо колір тексту введення на білий
+                    style: TextStyle(color: Colors.white),
 
                 ),
               ),
+              SizedBox(width: 20),
             ],
           ),
           SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            // Використовуємо SizedBox для додавання простору між кнопками
+
             children: [
 
               // enqueue
@@ -140,7 +141,7 @@ class _PriorityQueuePage extends State<PriorityQueuePage> {
               ),
 
               //get info bt
-              SizedBox(width: 16), // Додано простір шириною 16 між кнопками
+              SizedBox(width: 16),
               ElevatedButton(
                 onPressed: () {
                   int queueSize = priorityQueue.size();
@@ -175,14 +176,15 @@ class _PriorityQueuePage extends State<PriorityQueuePage> {
           SizedBox(height: 20),
           Row(
             children: [
+              SizedBox(width: 20),
               Expanded(
                 child: TextField(
                   controller: randPQsize,
                   decoration: InputDecoration(labelText: 'Size',
-                  labelStyle: TextStyle(color: Colors.white), // Змінюємо колір тексту мітки на білий
-                  hintStyle: TextStyle(color: Colors.white), // Змінюємо колір підказки на білий
+                  labelStyle: TextStyle(color: Colors.white),
+                  hintStyle: TextStyle(color: Colors.white),
                   ),
-                  style: TextStyle(color: Colors.white),// Змінюємо колір тексту введення на білий
+                  style: TextStyle(color: Colors.white),
 
                 ),
               ),
@@ -191,10 +193,10 @@ class _PriorityQueuePage extends State<PriorityQueuePage> {
                 child: TextField(
                   controller: randPQmaxPrio,
                   decoration: InputDecoration(labelText: 'Max priority',
-                    labelStyle: TextStyle(color: Colors.white), // Змінюємо колір тексту мітки на білий
-                    hintStyle: TextStyle(color: Colors.white), // Змінюємо колір підказки на білий
+                    labelStyle: TextStyle(color: Colors.white),
+                    hintStyle: TextStyle(color: Colors.white),
                   ),
-                  style: TextStyle(color: Colors.white), // Змінюємо колір тексту введення на білий
+                  style: TextStyle(color: Colors.white),
 
                 ),
               ),
@@ -203,13 +205,14 @@ class _PriorityQueuePage extends State<PriorityQueuePage> {
                 child: TextField(
                   controller: randPQmaxVal,
                   decoration: InputDecoration(labelText: 'Max value',
-                    labelStyle: TextStyle(color: Colors.white), // Змінюємо колір тексту мітки на білий
-                    hintStyle: TextStyle(color: Colors.white), // Змінюємо колір підказки на білий
+                    labelStyle: TextStyle(color: Colors.white),
+                    hintStyle: TextStyle(color: Colors.white),
                   ),
-                  style: TextStyle(color: Colors.white), // Змінюємо колір тексту введення на білий
+                  style: TextStyle(color: Colors.white),
 
                 ),
               ),
+              SizedBox(width: 20),
             ],
           ),
 
@@ -227,7 +230,7 @@ class _PriorityQueuePage extends State<PriorityQueuePage> {
                 },
                 child: Text('Generate rand'),
               ),
-              SizedBox(width: 16), // Додано простір шириною 16 між кнопками
+              SizedBox(width: 16),
               ElevatedButton(
                 onPressed: () {
                   priorityQueue.merge(randPriorityQueue);
@@ -244,14 +247,15 @@ class _PriorityQueuePage extends State<PriorityQueuePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(width: 20),
               Expanded(
                 child: TextField(
                   controller: searchController,
                   decoration: InputDecoration(labelText: 'Search Value',
-                    labelStyle: TextStyle(color: Colors.white), // Змінюємо колір тексту мітки на білий
-                    hintStyle: TextStyle(color: Colors.white), // Змінюємо колір підказки на білий
+                    labelStyle: TextStyle(color: Colors.white),
+                    hintStyle: TextStyle(color: Colors.white),
                   ),
-                  style: TextStyle(color: Colors.white), // Змінюємо колір тексту введення на білий
+                  style: TextStyle(color: Colors.white),
 
                 ),
               ),
@@ -265,6 +269,7 @@ class _PriorityQueuePage extends State<PriorityQueuePage> {
                 },
                 child: Text('Search Position'),
               ),
+              SizedBox(width: 20),
             ],
           ),
           SizedBox(height: 20),
@@ -299,10 +304,6 @@ class PriorityQueue {
     return elements.isEmpty;
   }
 
-  // int size() {
-  //   return elements.length;
-  // }
-
   int size() {
     int count = 0;
     for (var element in elements) {
@@ -310,14 +311,6 @@ class PriorityQueue {
     }
     return count;
   }
-
-
-  // Element findMin() {
-  //   if (isEmpty()) {
-  //     throw Exception('Queue is empty');
-  //   }
-  //   return elements.first;
-  // }
 
   Element findMin() {
     if (isEmpty()) {
@@ -345,14 +338,6 @@ class PriorityQueue {
     return maxElement;
   }
 
-
-
-  /*Element findMax() {
-    if (isEmpty()) {
-      throw Exception('Queue is empty');
-    }
-    return elements.last;
-  }*/
 
   Element getThirdFromFront() {
     if (elements.length >= 3) {
@@ -398,55 +383,49 @@ class PriorityQueue {
         return i;
       }
     }
-    return -1; // Element not found
+    return -1;
   }
 
   List<Element> getElementsByPriority(int targetPriority) {
     return elements.where((element) => element.priority == targetPriority).toList();
   }
 
-  void merge(PriorityQueue otherQueue) {
-    // Create an empty list to store the merged elements
-    List<Element> mergedElements = [];
+    void merge(PriorityQueue otherQueue) {
+      List<Element> mergedElements = [];
 
-    int i = 0;
-    int j = 0;
+      int i = 0;
+      int j = 0;
 
-    // Merge the elements while maintaining the sorted order
-    while (i < elements.length && j < otherQueue.elements.length) {
-      if (elements[i].priority < otherQueue.elements[j].priority) {
+      while (i < elements.length && j < otherQueue.elements.length) {
+        if (elements[i].priority < otherQueue.elements[j].priority) {
+          mergedElements.add(elements[i]);
+          i++;
+        } else {
+          mergedElements.add(otherQueue.elements[j]);
+          j++;
+        }
+      }
+
+      while (i < elements.length) {
         mergedElements.add(elements[i]);
         i++;
-      } else {
+      }
+
+      while (j < otherQueue.elements.length) {
         mergedElements.add(otherQueue.elements[j]);
         j++;
       }
-    }
 
-    // Add any remaining elements from both queues
-    while (i < elements.length) {
-      mergedElements.add(elements[i]);
-      i++;
+      elements = mergedElements;
     }
-
-    while (j < otherQueue.elements.length) {
-      mergedElements.add(otherQueue.elements[j]);
-      j++;
-    }
-
-    // Replace the original elements with the merged elements
-    elements = mergedElements;
-  }
 
 
   void generateRandomQueue(int size, int maxPriority, int maxValue) {
-    // Clear the current elements to create a new queue.
     elements.clear();
 
     final random = Random();
 
     for (int i = 0; i < size; i++) {
-      // Generate a random value and priority within the specified range.
       int val = random.nextInt(maxValue + 1);
       int priority = random.nextInt(maxPriority + 1);
 
