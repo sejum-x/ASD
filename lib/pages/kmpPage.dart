@@ -25,9 +25,7 @@ class _KMPState extends State<KMP> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('KMP Search'),
-      ),
+      backgroundColor: const Color(0xffc6c3c1),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(

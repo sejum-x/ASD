@@ -9,6 +9,7 @@ import 'package:flutter_pj/pages/merge.dart';
 import 'package:flutter_pj/pages/count.dart';
 import 'package:flutter_pj/pages/priorityQueuePage.dart';
 import 'package:flutter_pj/pages/binarySearchTreePage.dart';
+import 'package:flutter_pj/pages/binarySearchPage.dart';
 import 'package:flutter_pj/pages/kmpPage.dart';
 import 'package:flutter_pj/pages/bmPage.dart';
 import 'package:hidden_drawer_menu/hidden_drawer_menu.dart';
@@ -106,6 +107,15 @@ class _HiddenDrawerState extends State<HiddenDrawer> {
             colorLineSelected: Color(0xffffffff),
           ),
            BinarySearchTreePage()
+      ),
+      ScreenHiddenDrawer(
+          ItemHiddenMenu(
+            name: 'Binary search',
+            baseStyle: myTextStyle,
+            selectedStyle: myTextStyle,
+            colorLineSelected: Color(0xffffffff),
+          ),
+          BinarySearchPage()
       ),
       ScreenHiddenDrawer(
           ItemHiddenMenu(
